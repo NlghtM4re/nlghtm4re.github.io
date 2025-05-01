@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Calculator</title>
+        <link rel="stylesheet" type="text/css" href="style.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <h1 class="title">Calculator</h1>
+    </head>
+    <body>
+        <header>
+            <div class="navbar">
+                <div class="subnav">
+                    <a class="subnavbtn" href="index.html">Home</a>
+                </div> 
+            <br>
+        </header>
+
+        <div id="calc">
+                <input type="text" id="field" readonly />
+                <div id="calc_buttons">
+                        <button onclick="resetNumber()">C</button>
+                        <button></button>
+                        <button></button>
+                        <button id="add" onclick="setOperator('+')">+</button>
+                        <button onclick="setNumber(7)">7</button>
+                        <button onclick="setNumber(8)">8</button>
+                        <button onclick="setNumber(9)">9</button>
+                        <button id="sub" onclick="setOperator('-')">-</button>
+                        <button onclick="setNumber(4)">4</button>
+                        <button onclick="setNumber(5)">5</button>
+                        <button onclick="setNumber(6)">6</button>
+                        <button id="mul" onclick="setOperator('*')">x</button>
+                        <button onclick="setNumber(1)">1</button>
+                        <button onclick="setNumber(2)">2</button>
+                        <button onclick="setNumber(3)">3</button>
+                        <button id="div" onclick="setOperator('/')">/</button>
+                        <button></button>
+                        <button onclick="setNumber(0)">0</button>
+                        <button></button>
+                        <button onclick="calculateResult()">=</button> 
+                    </div>  
+        </div>
+        
+
+        <script>
+                function resetNumber() {
+                    document.getElementById("field").value = '';
+                }
+            
+                function setNumber(number) {
+                        const field = document.getElementById("field");
+                        field.value = field.value === '0' ? '' : field.value;
+                        field.value += number;
+                }
+
+                function setOperator(operator) {
+                        const field = document.getElementById("field");
+                        const lastChar = field.value.slice(-1);
+
+                        if (['+', '-', '*', '/'].includes(lastChar)) {
+                                field.value = field.value.slice(0, -1);
+                        }
+
+                        field.value += operator;
+                }
+
+                function calculateResult() {
+                        const field = document.getElementById("field");
+                        try {
+                            field.value = eval(field.value);
+                        } catch (error) {
+                            field.value = "Error";
+                        }
+                }
+        </script>
+        <style>
+                #calc {
+                        height: auto;
+                        width: 250px;
+                        background-color: #333;
+                        border-radius: 10px;
+                        margin: 50px auto;
+                        padding: 20px;
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+                }
+
+                #field {
+                        width: 90%;
+                        height: 50px;
+                        margin-bottom: 20px;
+                        font-size: 1.5em;
+                        text-align: left;
+                        border: none;
+                        border-radius: 5px;
+                        padding: 10px;
+                        background-color: #fff;
+                        color: #000;
+                        border: none;
+                        cursor: default;
+                }
+
+                #calc_buttons {
+                        display: grid;
+                        grid-template-columns: repeat(4, 1fr);
+                        gap: 10px;
+                        width: 100%;
+                }
+
+                button {
+                        height: 50px;
+                        font-size: 1.2em;
+                        border: none;
+                        border-radius: 5px;
+                        background-color: #555;
+                        color: #fff;
+                        cursor: pointer;
+                        transition: background-color 0.3s ease;
+                }
+
+                button:hover {
+                        background-color: #777;
+                }
+
+                button:active {
+                        background-color: #999;
+                }
+        </style>
+        <footer>
+            <script src="main.js"></script>
+        </footer>
+    </body>
+</html>

@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <h1  style=" font-family: Bahnschrift; display: flex; justify-content: center; color: white; padding-top: 10px;">Admin Login</h1>
+    <a style="color: white; font-size: 20px; position:absolute; top: 1%; " href="index.html">Back</a>
+  </head>
+  <body>
+    <header>
+      
+    </header>
+    <div class="login-box">
+        <form action="Admin.html" method="post">
+          <div class="user-box">
+            <input type="text" id="username" name="username">
+            <label for="username">Username</label>
+          </div>
+          <div class="user-box">
+            <input type="password" id="password" name="password">
+            <label for="password">Password</label>
+          </div>
+          <button type="submit">SEND<span></span></button>
+        </form>
+      </div>  
+      <footer>
+        <script>
+          const form = document.querySelector('form');
+form.addEventListener('submit', (event) => {
+  event.preventDefault();
+  const username = form.elements['username'].value;
+  const password = form.elements['password'].value;
+
+  // ******************* if you see this you are not smart*********************
+
+  if (username === 'username' && password === '1234') {
+    const overlay = document.createElement('div');
+    overlay.classList.add('overlay');
+    document.body.appendChild(overlay);
+    const popup = document.createElement('div');
+    popup.classList.add('popup');
+    popup.textContent = 'Correct! Do you want to continue?';
+    const continueButton = document.createElement('button');
+    continueButton.classList.add('continue');
+    continueButton.textContent = 'Continue';
+    continueButton.addEventListener('click', () => {
+      window.location.href = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ&ab_channel=RickAstley';
+    });
+    const cancelButton = document.createElement('button');
+    cancelButton.textContent = 'Cancel';
+    cancelButton.addEventListener('click', () => {
+      document.body.removeChild(popup);
+      document.body.removeChild(overlay);
+    });
+    popup.appendChild(continueButton);
+    popup.appendChild(cancelButton);
+    document.body.appendChild(popup);
+  } else {
+    const overlay = document.createElement('div');
+    overlay.classList.add('overlay');
+    document.body.appendChild(overlay);
+    const popup = document.createElement('div');
+    popup.classList.add('popup');
+    popup.textContent = 'Incorrect username or password. Please try again.';
+    document.body.appendChild(popup);
+    // Close the popup and overlay when clicked outside
+    overlay.addEventListener('click', () => {
+      document.body.removeChild(popup);
+      document.body.removeChild(overlay);
+    });
+  }
+});
+        </script>
+        <style>
+            /* Style for the popup box */
+    .popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #d3d3d3; /* Light grey */
+    padding: 30px;	
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.372);
+    z-index: 9999;
+    border-radius: 10px;
+    font-size: 16.5px;
+    color: #333; /* Dark grey */
+    }
+
+    /* Style for the overlay */
+    .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 9998;
+    }
+
+    /* Style for the buttons in the popup box */
+    .popup button {
+    margin: 10px;
+    padding: 10px;
+    border: none;
+    background-color: #a9a9a9; /* Dark grey */
+    cursor: pointer;
+    color: white;
+    border-radius: 5px;
+    font-size: 15px;
+    }
+
+    .popup button:hover {
+    background-color: #696969; /* Dim grey */
+    }
+
+    .popup button.continue {
+    background-color: #808080; /* Grey */
+    color: white;
+    }
+
+    .popup button.continue:hover {
+    background-color: #505050; /* Darker grey */
+    }
+    .login-box {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 400px;
+    padding: 40px;
+    transform: translate(-50%, -50%);
+    background: #d3d3d3; /* Light grey */
+    box-sizing: border-box;
+    box-shadow: 0 15px 25px rgba(0,0,0,.6);
+    border-radius: 10px;
+    }
+
+    .login-box .user-box {
+    position: relative;
+    }
+
+    .login-box .user-box input {
+    width: 100%;
+    padding: 10px 0;
+    font-size: 16px;
+    color: #333; /* Dark grey */
+    margin-bottom: 30px;
+    border: none;
+    border-bottom: 1px solid #333; /* Dark grey */
+    outline: none;
+    background: transparent;
+    }
+
+    .login-box .user-box label {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 10px 0;
+    font-size: 16px;
+    color: #333; /* Dark grey */
+    pointer-events: none;
+    transition: .5s;
+    }
+
+    .login-box .user-box input:focus ~ label,
+    .login-box .user-box input:valid ~ label {
+    top: -20px;
+    left: 0;
+    color: #333; /* Dark grey */
+    font-size: 12px;
+    }
+
+    .login-box form button {
+    position: relative;
+    display: inline-block;
+    padding: 10px 20px;
+    color: #333; /* Dark grey */
+    font-size: 16px;
+    text-decoration: none;
+    text-transform: uppercase;
+    overflow: hidden;
+    transition: .5s;
+    margin-top: 40px;
+    letter-spacing: 4px;
+    border: none;
+    background-color: rgba(0, 0, 0, 0);
+    border-radius: 5px;
+    }
+
+    .login-box button:hover {
+    background: #a9a9a9; /* Dark grey */
+    color: white;
+    border-radius: 5px;
+    box-shadow: 0 0 5px #a9a9a9,
+                0 0 25px #a9a9a9,
+                0 0 50px #a9a9a9,
+                0 0 100px #a9a9a9;
+    cursor: pointer;
+    }
+
+    .login-box button span {
+    position: absolute;
+    display: block;
+    }
+
+    @keyframes btn-anim1 {
+    0% {
+      left: -100%;
+    }
+
+    50%,100% {
+      left: 100%;
+    }
+    } 
+
+    .login-box button span:nth-child(1) {
+    bottom: 2px;
+    left: -100%;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #a9a9a9); /* Dark grey */
+    animation: btn-anim1 2s linear infinite;
+    }
+
+    #incrementText {
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 30px;
+        display: flex;
+        height: 80%;
+        width: 90%;
+        top: 15%;
+        left: 5%;
+        position: absolute;
+        justify-content: center;
+        -webkit-user-select: none; /* Safari */
+        -ms-user-select: none; /* IE 10 and IE 11 */
+        user-select: none; /* Standard syntax */
+    }
+        </style>
+
+        </style>
+      </footer>
+
+    <footer>
+      <script src="main.js"></script>
+    </footer>
+  </body>
+</html>
