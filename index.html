@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Crazy Casino</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app">
+      <aside class="sidebar">
+      <nav>
+        <ul>
+          <li style="padding-top: 0;"><a>­<button class="toggle-sidebar" onclick="toggleSidebar()">☰</button></a></li>
+          <li><a href="#" onclick="showHome()">🎮 <span>All Games</span></a></li>
+          <li><a href="#" onclick="showSlotGame()">🍉 <span>Slot</span></a></li>
+          <li><a href="#" onclick="showChickenGame()">🐔 <span>Chicken Road</span></a></li>
+          <li><a href="#" onclick="showHelp()">❓ <span>Help</span></a></li>
+          <li><a href="#" onclick="showSettings()">⚙️ <span>Settings</span></a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <header class="top-bar">
+      <div class="logo">Crazy Casino</div>
+      <div class="credit-display">Credits: <span id="credits"></span></div>
+    </header>
+
+    <main class="main-content"> 
+
+      <section id="settings-section" style="display: none;">
+        <h2>Settings</h2>
+        <div class="settings">
+            <label for="number">Font size</label>
+            <input type="range" id="font-size" min="-5" max="7" value="0" oninput="adjustFontSize(this.value)" />
+            <button onclick="resetFontSize()">Reset</button><br>
+          <label for="decimal">Credits decimal</label>
+          <input type="number" id="decimal" min="0" max="6" value="2" />
+          <button onclick="resetDecimal()">Reset</button><br>
+        </div>
+      </section>
+
+      <section id="games-section" class="games-section">
+        <h2>All Games</h2>
+        <div class="games-grid">
+          <div class="game-card"><h3>Blackjack</h3><span>Coming soon...</span></div>
+          <div class="game-card"><h3>Red or Black</h3><span>Coming soon...</span></div>
+          <div class="game-card" onclick="showSlotGame()"><h3>Slot</h3><span>Try now</span></div>
+          <div class="game-card"><h3>Roulette</h3><span>Coming soon...</span></div>
+          <div class="game-card" onclick="showChickenGame()"><h3>Chicken</h3><span>Try now</span></div>
+        </div>
+      </section>
+
+      <section id="slot-section" class="slot-game" style="display:none;">
+        <h2>Slot Machine</h2>
+        <div class="slot-reels">
+          <div class="reel" id="reel1"><div class="symbols">🍇🍒🍇7️⃣🔔🍉🍇</div></div>
+          <div class="reel" id="reel2"><div class="symbols">🍇🍒🍇7️⃣🔔🍉🍇</div></div>
+          <div class="reel" id="reel3"><div class="symbols">🍇🍒🍇7️⃣🔔🍉🍇</div></div>
+        </div>
+        <div id="win"></div>
+        <input type="number" id="bet" value="10" min="1" class="bet-amount" />
+        <button id="slot-button" onclick="startSpin()">Spin</button>
+        <button id="slot-button" onclick="document.getElementById('bet').value = credits;">All in</button>
+        <div style="margin-top: 20px; text-align: left; max-width: 400px; margin-left: auto; margin-right: auto;">
+          <h4>How to Play:</h4>
+          <p>Press the "Spin" button to spin the reels. Each spin costs the amount you bet.</p>
+          <h4>How to Win:</h4>
+          <ul>
+            <li>Three "🍒" = 10x your bet</li>
+            <li>Three "🍇" = 10x your bet</li>
+            <li>Three "🍉" = 10x your bet</li>
+            <li>Three "🔔" = 25x your bet</li>
+            <li>Three "7️⃣" = 100x your bet</li>
+          </ul>
+        </div>
+      </section >
+
+ <section id="chicken-section" class="chicken-game" style="display:none;">
+  <div class="game-wrapper">
+    <div class="chicken-lane">
+      <div class="sidewalk left"></div>
+      <div id="road" class="road"></div>
+      <div id="line" class="line" style="display: none;"></div>
+      <div class="sidewalk right"></div>
+    </div>
+    <div class="controls">
+      <div class="difficulty-selector">
+        <label>Difficulty</label>
+        <button class="difficulty" data-diff="easy">Easy</button>
+        <button class="difficulty" data-diff="medium">Medium</button>
+        <button class="difficulty" data-diff="hard">Hard</button>
+        <button class="difficulty" data-diff="hardcore">Hardcore</button>
+      </div>
+      <div class="bet-controls">
+        <button id="min-bet-button">MIN</button>
+        <input id="bet-input" type="number" placeholder="Enter your bet" min="0.01" step="0.01" />
+        <button id="max-bet-button">MAX</button>
+      </div>
+      <button id="play-button">Play</button>
+      <div id="in-game-buttons" style="display: none;">
+        <button id="cashout-button">Cash Out</button>
+        <button id="go-button">GO</button>
+      </div>
+    </div>
+    <div id="message"></div>
+  </div>
+</section>
+
+<script>
+</script>
+
+
+
+
+
+
+
+      <section id="help-section" style="display: none; text-align: center;">
+        <h2>Help</h2>
+        <p>Good luck</p>
+      </section>
+    </main>
+  </div>
+
+  <footer>
+    © 2025 Crazy Casino | <a href="#">Terms</a> | <a href="#">Privacy</a> | <a href="#">Support</a>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
