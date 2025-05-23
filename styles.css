@@ -14,6 +14,7 @@ body {
     flex: 1;
 }
 
+
 /* Sidebar Styles */
 .sidebar {
     width: 200px;
@@ -95,11 +96,11 @@ section {
 .main-content {
     flex: 1;
     margin-top: 60px;
-    margin-left: 200px; /* Matches the default sidebar width */
+    margin-left: 200px;
     padding: 0 40px 20px 40px;
     display: flex;
     flex-direction: column;
-    transition: margin-left 0.3s ease; /* Smooth transition when sidebar toggles */
+    transition: margin-left 0.3s ease;
 }
 
 .sidebar.collapsed ~ .main-content {
@@ -133,6 +134,27 @@ section {
     color: #10b981;
     margin-right: 0; /* Push it closer to the left */
     padding-right: 40px; /* Optional: Adjust spacing from the edge */
+}
+
+.sidebar .dept-display {
+    font-weight: bold;
+    color: red;
+    margin-top: auto; /* Push it to the bottom of the sidebar */
+    padding: 20px; /* Add some padding for spacing */
+    text-align: left; /* Center the text */
+    width: 100%; /* Ensure it spans the full width of the sidebar */
+}
+
+/* Update Styles */
+
+.update-date{
+    font-size: 12px;
+}
+
+.version{
+    margin-bottom: 5px;
+    font-size: 20px;
+    font-weight: bold;
 }
 
 /* Games Section */

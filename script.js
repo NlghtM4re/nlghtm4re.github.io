@@ -10,6 +10,12 @@ if (isNaN(credits)) {
     credits = 100;
 }
 
+let dept = parseInt(localStorage.getItem("dept"), 10);
+if (isNaN(dept)) {
+    dept = 0;
+}
+
+
 let odd = 0;
 let isDevMode = false;
 
@@ -30,6 +36,77 @@ Object.defineProperty(window, "odd", { // window.odd = value;
         return odd;
     }
 });
+
+function takeLoan() {
+    if (credits > 100) {
+        alert("You can only take a loan when you have less than 100 credits!");
+        return;
+    }
+
+    dept += 100;
+    credits += 100;
+
+    // Save updated values to localStorage
+    localStorage.setItem("dept", dept);
+    localStorage.setItem("credits", credits);
+
+    // Update the display
+    document.getElementById("credits").textContent = credits.toFixed(2);
+    document.getElementById("debt").textContent = dept.toFixed(2);
+}
+
+function payLoan() {
+    const paymentAmount = parseFloat(document.getElementById("payment-amount").value);
+    if (isNaN(paymentAmount) || paymentAmount <= 0) {
+        alert("Invalid payment amount!");
+        return;
+    }
+
+    if (paymentAmount > credits) {
+        alert("You don't have enough credits to make this payment!");
+        return;
+    }
+
+    if (paymentAmount > dept) {
+        alert("You are trying to pay more than your debt!");
+        return;
+    }
+
+    // Deduct the payment amount from credits and debt
+    credits -= paymentAmount;
+    dept -= paymentAmount;
+
+    // Save updated values to localStorage
+    localStorage.setItem("dept", dept);
+    localStorage.setItem("credits", credits);
+
+    // Update the display
+    document.getElementById("credits").textContent = credits.toFixed(2);
+    document.getElementById("debt").textContent = dept.toFixed(2);
+
+    alert(`You successfully paid $${paymentAmount.toFixed(2)} towards your loan.`);
+}
+
+// Initialize the dept display on page load
+document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById("debt").textContent = dept.toFixed(2);
+});
+
+function payLoanAutomatically(winnings) {
+    if (dept > 0) {
+        const payment = Math.min(winnings * 0.5, dept); // Deduct 50% of winnings or the remaining debt, whichever is smaller
+        dept -= payment;
+        winnings -= payment;
+
+        // Save updated debt to localStorage
+        localStorage.setItem("dept", dept);
+
+        // Update the debt display
+        document.getElementById("debt").textContent = dept.toFixed(2);
+    }
+
+    return winnings; // Return the remaining winnings after debt payment
+}
 
 let baseFontSize = 16; // Default base font size
 
@@ -77,7 +154,7 @@ function updateCredits(amount) {
     credits += amount;
     credits = parseFloat(credits.toFixed(2)); // Keep credits precise to 2 decimals internally
     localStorage.setItem("credits", credits);
-    updateCreditsDisplay(); // Update the display with the selected decimal places
+    document.getElementById("credits").textContent = credits.toFixed(2);
 }
 
 // Event listener for the "Credits decimal" input
@@ -160,7 +237,11 @@ function calculateWinnings(results, betAmount) {
         else if (r1 === "7️⃣") multiplier = 100;
     }
 
-    const winnings = betAmount * multiplier;
+    let winnings = betAmount * multiplier;
+
+    // Automatically pay off debt with 50% of winnings
+    winnings = payLoanAutomatically(winnings);
+
     updateCredits(winnings);
     document.getElementById("win").textContent = "x" + multiplier;
 }
@@ -181,6 +262,8 @@ function loadLastSection() {
         else if (lastSection === "help") showHelp();
         else if (lastSection === "settings") showSettings();
         else if (lastSection === "home") showHome();
+        else if (lastSection === "loan") showLoan();
+        else if (lastSection === "update") showUpdate();
         else showHome();
     } else {
         showHome();
@@ -194,6 +277,8 @@ function showSlotGame() {
     document.getElementById("help-section").style.display = "none";
     document.getElementById("chicken-section").style.display = "none";
     document.getElementById("settings-section").style.display = "none";
+    document.getElementById("loan-section").style.display = "none";
+    document.getElementById("update-section").style.display = "none";
 }
 
 function showChickenGame() {
@@ -203,6 +288,8 @@ function showChickenGame() {
     document.getElementById("help-section").style.display = "none";
     document.getElementById("chicken-section").style.display = "block";
     document.getElementById("settings-section").style.display = "none";
+    document.getElementById("loan-section").style.display = "none";
+    document.getElementById("update-section").style.display = "none";
 }
 
 function showHome() {
@@ -212,6 +299,8 @@ function showHome() {
     document.getElementById("help-section").style.display = "none";
     document.getElementById("chicken-section").style.display = "none";
     document.getElementById("settings-section").style.display = "none";
+    document.getElementById("loan-section").style.display = "none";
+    document.getElementById("update-section").style.display = "none";
 }
 
 function showHelp() {
@@ -221,6 +310,8 @@ function showHelp() {
     document.getElementById("help-section").style.display = "block";
     document.getElementById("chicken-section").style.display = "none";
     document.getElementById("settings-section").style.display = "none";
+    document.getElementById("loan-section").style.display = "none";
+    document.getElementById("update-section").style.display = "none";
 }
 
 function showSettings() {
@@ -230,6 +321,30 @@ function showSettings() {
     document.getElementById("help-section").style.display = "none";
     document.getElementById("chicken-section").style.display = "none";
     document.getElementById("settings-section").style.display = "block";
+    document.getElementById("loan-section").style.display = "none";
+    document.getElementById("update-section").style.display = "none";
+}
+
+function showLoan() {
+    saveCurrentSection("loan");
+    document.getElementById("games-section").style.display = "none";
+    document.getElementById("slot-section").style.display = "none";
+    document.getElementById("help-section").style.display = "none";
+    document.getElementById("chicken-section").style.display = "none";
+    document.getElementById("settings-section").style.display = "none";
+    document.getElementById("loan-section").style.display = "block";
+    document.getElementById("update-section").style.display = "none";
+}
+
+function showUpdate() {
+    saveCurrentSection("update");
+    document.getElementById("games-section").style.display = "none";
+    document.getElementById("slot-section").style.display = "none";
+    document.getElementById("help-section").style.display = "none";
+    document.getElementById("chicken-section").style.display = "none";
+    document.getElementById("settings-section").style.display = "none";
+    document.getElementById("loan-section").style.display = "none"
+    document.getElementById("update-section").style.display = "block";
 }
 
 document.addEventListener("DOMContentLoaded", loadLastSection);
@@ -400,8 +515,7 @@ function stepForward() {
         if (stepIndex > 0 && stepIndex <= multipliers.length) {
             const winnings = (bet * multipliers[stepIndex - 1]).toFixed(2);
             message.innerText = `🏁 You safely crossed the road and won $${winnings}!`;
-        } else {
-            message.innerText = `🏁 You safely crossed the road but no winnings were calculated.`;
+            document.querySelectorAll(".difficulty").forEach(btn => btn.removeAttribute("disabled"));
         }
         cashOut();
         return;
@@ -473,6 +587,7 @@ document.addEventListener("DOMContentLoaded", () => {
     adjustRoadVisibility();
     loadLastSection();
 });
+
 function cashOut() {
     if (!playing) return;
 
@@ -491,16 +606,18 @@ function cashOut() {
         message.innerText = `🏁 You safely reached the sideline and won $${winnings}!`;
     }
 
-    updateCredits(parseFloat(winnings) || 0); // Ensure winnings are a valid number
+    document.querySelectorAll(".difficulty").forEach(btn => btn.removeAttribute("disabled"));
+
+    // Automatically pay off debt with 50% of winnings
+    winnings = payLoanAutomatically(parseFloat(winnings) || 0);
+
+    updateCredits(winnings); // Update credits with remaining winnings
 
     inGameButtons.style.display = "none";
     playButton.style.display = "inline-block";
     stepIndex = -1;
     playing = false;
     resetCHickenPosition();
-
-    // Re-enable difficulty buttons after the game ends
-    document.querySelectorAll(".difficulty").forEach(btn => btn.removeAttribute("disabled"));
 }
 
 betInput.addEventListener("input", () => {

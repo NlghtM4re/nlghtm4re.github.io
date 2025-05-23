@@ -16,10 +16,13 @@
           <li><a href="#" onclick="showHome()">🎮 <span>All Games</span></a></li>
           <li><a href="#" onclick="showSlotGame()">🍉 <span>Slot</span></a></li>
           <li><a href="#" onclick="showChickenGame()">🐔 <span>Chicken Road</span></a></li>
+          <li><a href="#" onclick="showLoan()">💳 <span>Loan</span></a></li>
           <li><a href="#" onclick="showHelp()">❓ <span>Help</span></a></li>
           <li><a href="#" onclick="showSettings()">⚙️ <span>Settings</span></a></li>
+          <li><a href="#" onclick="showUpdate()">❕ <span>Update</span></a></li>
         </ul>
       </nav>
+      <div class="dept-display">Debt: <span id="debt">0</span></div>
     </aside>
 
     <header class="top-bar">
@@ -28,6 +31,51 @@
     </header>
 
     <main class="main-content"> 
+
+      <section id="loan-section" style="display: none;">
+        <h2>Loan</h2>
+        <div class="loan">
+          <p>-You can only have loan when you have less than 100 credits <br>
+         -You will have to pay your dept back<br>
+         -When having a dept,  50% of your casino winning is going to be use for your dept.<br>
+         -There is a maximum of 100 credits per loan<br></p>
+          <button onclick="takeLoan(100)">Take $100 Loan</button>
+          <br><br>
+          <label for="payment-amount">Payment Amount</label>
+          <input type="number" id="payment-amount" min="0" />
+          <button onclick="payLoan()">Pay Loan</button>
+        </div>
+      </section>
+
+      <section id="update-section" style="display: none;">
+        <h2>Update Log</h2>
+        <div class="update-log">
+          <div class="update-entry">
+            <p class="version">Version 0.1.2</p>
+            <span class="update-date">2025-05-23</span>
+            <ul>
+              <li>Loan system added</li>
+              <li>Chicken game difficulty swap fixed</li>
+            </ul>
+          </div>
+          <div class="update-entry">
+            <p class="version">Version 0.1.0 </p>
+            <span class="update-date">2025-05-20</span>
+            <ul>
+              <li>Chicken game added</li>
+              <li>Slot game added</li>
+              <li>Settings added</li>
+            </ul>
+          </div>
+          <div class="update-entry">
+            <p class="version">Version 0.0.0 </p>
+            <span class="update-date">2025-05-14</span>
+            <ul>
+              <li>Initial release</li>
+            </ul>
+          </div>
+        </div>
+      </section>
 
       <section id="settings-section" style="display: none;">
         <h2>Settings</h2>
@@ -77,7 +125,7 @@
         </div>
       </section >
 
- <section id="chicken-section" class="chicken-game" style="display:none;">
+      <section id="chicken-section" class="chicken-game" style="display:none;">
   <div class="game-wrapper">
     <div class="chicken-lane">
       <div class="sidewalk left"></div>
@@ -107,6 +155,8 @@
     <div id="message"></div>
   </div>
 </section>
+    </section>
+
 
 <script>
 </script>
