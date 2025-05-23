@@ -7,7 +7,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
 </head>
-<body style="margin:0;">
+<body>
   <div class="app">
       <aside class="sidebar">
       <nav>
@@ -83,9 +83,6 @@
             <label for="number">Font size</label>
             <input type="range" id="font-size" min="-5" max="7" value="0" oninput="adjustFontSize(this.value)" />
             <button onclick="resetFontSize()">Reset</button><br>
-          <label for="decimal">Credits decimal</label>
-          <input type="number" id="decimal" min="0" max="6" value="2" />
-          <button onclick="resetDecimal()">Reset</button><br>
         </div>
       </section>
 
@@ -108,7 +105,7 @@
           <div class="reel" id="reel3"><div class="symbols">🍇🍒🍇7️⃣🔔🍉🍇</div></div>
         </div>
         <div id="win"></div>
-        <input type="number" id="bet" value="10" min="1" class="bet-amount" />
+        <input type="number" id="bet" value="1" min="0.01" class="bet-amount" />
         <button id="slot-button" onclick="startSpin()">Spin</button>
         <button id="slot-button" onclick="document.getElementById('bet').value = credits;">All in</button>
         <div style="margin-top: 20px; text-align: left; max-width: 400px; margin-left: auto; margin-right: auto;">
@@ -116,6 +113,7 @@
           <p>Press the "Spin" button to spin the reels. Each spin costs the amount you bet.</p>
           <h4>How to Win:</h4>
           <ul>
+            <li>Three differents fruits = 1.5x your bet</li>
             <li>Three "🍒" = 10x your bet</li>
             <li>Three "🍇" = 10x your bet</li>
             <li>Three "🍉" = 10x your bet</li>
@@ -156,20 +154,13 @@
   </div>
 </section>
     </section>
-
-
-<script>
-</script>
-
-
-
-
-
-
-
       <section id="help-section" style="display: none; text-align: center;">
         <h2>Help</h2>
         <p>Good luck</p>
+        <div class="money">
+          <p>You found a cent on the ground. </p>
+          <button onclick="findMoney(0.01)">Pick it up</button>
+        </div>
       </section>
     </main>
   </div>

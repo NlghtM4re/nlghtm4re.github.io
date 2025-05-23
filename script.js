@@ -37,8 +37,14 @@ Object.defineProperty(window, "odd", { // window.odd = value;
     }
 });
 
+function findMoney(value) {
+    credits += value;
+    localStorage.setItem("credits", credits); // Save updated credits to localStorage
+    document.getElementById("credits").textContent = credits.toFixed(2); // Update the display
+}
+
 function takeLoan() {
-    if (credits > 100) {
+    if (credits > 99) {
         alert("You can only take a loan when you have less than 100 credits!");
         return;
     }
@@ -142,31 +148,26 @@ function updateCreditsDisplay() {
     document.getElementById("credits").textContent = formattedCredits;
 }
 
-function resetDecimal() {
-    const defaultDecimal = 2; // Default decimal places
-    document.getElementById("decimal").value = defaultDecimal;
-    localStorage.setItem("decimalPlaces", defaultDecimal); // Save to localStorage
-    updateCreditsDisplay(); // Update the display with the default decimal places
-}
-
-// Update credits and adjust the display
 function updateCredits(amount) {
     credits += amount;
     credits = parseFloat(credits.toFixed(2)); // Keep credits precise to 2 decimals internally
-    localStorage.setItem("credits", credits);
-    document.getElementById("credits").textContent = credits.toFixed(2);
+    localStorage.setItem("credits", credits.toFixed(2)); // Save credits with decimals
+    const decimalPlaces = parseInt(localStorage.getItem("decimalPlaces"), 10) || 2; // Default to 2 decimals
+    document.getElementById("credits").textContent = credits.toFixed(decimalPlaces);
 }
 
-// Event listener for the "Credits decimal" input
-document.getElementById("decimal").addEventListener("input", updateCreditsDisplay);
-
-// Initialize the credits display and decimal input on page load
 document.addEventListener("DOMContentLoaded", () => {
+    const savedCredits = localStorage.getItem("credits");
+    if (savedCredits !== null) {
+        credits = parseFloat(savedCredits); // Load saved credits
+    }
+
     const savedDecimal = localStorage.getItem("decimalPlaces");
     if (savedDecimal !== null) {
         document.getElementById("decimal").value = savedDecimal;
     }
-    updateCreditsDisplay();
+
+    updateCreditsDisplay(); // Update the display with the saved decimal places
 });
 
 function fillSymbols(reelDiv) {
@@ -235,6 +236,14 @@ function calculateWinnings(results, betAmount) {
         else if (r1 === "🍉") multiplier = 10;
         else if (r1 === "🔔") multiplier = 25;
         else if (r1 === "7️⃣") multiplier = 100;
+    }else {
+      if  (["🍒", "🍇", "🍉"].includes(r1)) {
+            if  (["🍒", "🍇", "🍉"].includes(r2)) {
+                if  (["🍒", "🍇", "🍉"].includes(r3)) {
+                    multiplier = 1.5;
+                }
+            }
+        }
     }
 
     let winnings = betAmount * multiplier;
@@ -264,6 +273,7 @@ function loadLastSection() {
         else if (lastSection === "home") showHome();
         else if (lastSection === "loan") showLoan();
         else if (lastSection === "update") showUpdate();
+        else if (lastSection === "help") showHelp();
         else showHome();
     } else {
         showHome();
@@ -304,7 +314,7 @@ function showHome() {
 }
 
 function showHelp() {
-    saveCurrentSection("home");
+    saveCurrentSection("help");
     document.getElementById("games-section").style.display = "none";
     document.getElementById("slot-section").style.display = "none";
     document.getElementById("help-section").style.display = "block";

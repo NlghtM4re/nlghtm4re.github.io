@@ -92,6 +92,10 @@ section {
     padding-inline: 0;
 }
 
+.money{
+    padding-top: 30px;
+}
+
 /* Main Content Styles */
 .main-content {
     flex: 1;
