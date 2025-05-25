@@ -747,7 +747,7 @@ button#play-button:active {
     z-index: 1001;
 }
 .game-details {
-    height: 200px;
+    height: 250px;
     background: #222;
     border-radius: 10px;
     padding: 16px 18px;
