@@ -30,19 +30,31 @@
     </header>
 
     <main class="main-content"> 
-
-      <section id="games-section" class="games-section">
-        <h2>All Games</h2>
-        <div class="games-grid">
-          <a class="game-card" href="slot.html"><h3>Slot</h3><span>Try now</span></a>
-          <a class="game-card" href="chicken.html"><h3>Chicken</h3><span>Try now</span></a>
-          <a class="game-card" href="#"><h3>Mine</h3><span>Coming Soon...</span></a>
-          <a class="game-card" href="#"><h3>Roulette</h3><span>Coming soon...</span></a>
-          <a class="game-card" href="#"><h3>Blackjack</h3><span>Coming soon...</span></a>
-          <a class="game-card" href="#"><h3>Red or Black</h3><span>Coming soon...</span></a>
+      <section id="slot-section" class="slot-game">
+        <h2>Slot Machine</h2>
+        <div class="slot-reels">
+          <div class="reel" id="reel1"><div class="symbols">🍇🍒🍇7️⃣🔔🍉🍇</div></div>
+          <div class="reel" id="reel2"><div class="symbols">🍇🍒🍇7️⃣🔔🍉🍇</div></div>
+          <div class="reel" id="reel3"><div class="symbols">🍇🍒🍇7️⃣🔔🍉🍇</div></div>
         </div>
-      </section>
-
+        <div id="win"></div>
+        <input type="number" id="bet" value="1" min="0.01" class="bet-amount" />
+        <button id="slot-button" onclick="startSpin()">Spin</button>
+        <button id="slot-button" onclick="document.getElementById('bet').value = credits;">All in</button>
+        <div style="margin-top: 20px; text-align: left; max-width: 400px; margin-left: auto; margin-right: auto;">
+          <h4>How to Play:</h4>
+          <p>Press the "Spin" button to spin the reels. Each spin costs the amount you bet.</p>
+          <h4>How to Win:</h4>
+          <ul>
+            <li>Three fruits = 1.5x your bet</li>
+            <li>Three "🍒" = 10x your bet</li>
+            <li>Three "🍇" = 10x your bet</li>
+            <li>Three "🍉" = 10x your bet</li>
+            <li>Three "🔔" = 25x your bet</li>
+            <li>Three "7️⃣" = 100x your bet</li>
+          </ul>
+        </div>
+      </section >
     </main>
   </div>
 
@@ -51,5 +63,6 @@
   </footer>
 
   <script src="scripts/main.js"></script>
+  <script src="scripts/slot.js"></script>
 </body>
 </html>

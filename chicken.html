@@ -31,18 +31,37 @@
 
     <main class="main-content"> 
 
-      <section id="games-section" class="games-section">
-        <h2>All Games</h2>
-        <div class="games-grid">
-          <a class="game-card" href="slot.html"><h3>Slot</h3><span>Try now</span></a>
-          <a class="game-card" href="chicken.html"><h3>Chicken</h3><span>Try now</span></a>
-          <a class="game-card" href="#"><h3>Mine</h3><span>Coming Soon...</span></a>
-          <a class="game-card" href="#"><h3>Roulette</h3><span>Coming soon...</span></a>
-          <a class="game-card" href="#"><h3>Blackjack</h3><span>Coming soon...</span></a>
-          <a class="game-card" href="#"><h3>Red or Black</h3><span>Coming soon...</span></a>
-        </div>
-      </section>
-
+      <section id="chicken-section" class="chicken-game">
+  <div class="game-wrapper">
+    <div class="chicken-lane">
+      <div class="sidewalk left"></div>
+      <div id="road" class="road"></div>
+      <div id="line" class="line" style="display: none;"></div>
+      <div class="sidewalk right"></div>
+    </div>
+    <div class="controls">
+      <div class="difficulty-selector">
+        <label>Difficulty</label>
+        <button class="difficulty" data-diff="easy">Easy</button>
+        <button class="difficulty" data-diff="medium">Medium</button>
+        <button class="difficulty" data-diff="hard">Hard</button>
+        <button class="difficulty" data-diff="hardcore">Hardcore</button>
+      </div>
+      <div class="bet-controls">
+        <button id="min-bet-button">MIN</button>
+        <input id="bet-input" type="number" placeholder="Enter your bet" min="0.01" step="0.01" />
+        <button id="max-bet-button">MAX</button>
+      </div>
+      <button id="play-button">Play</button>
+      <div id="in-game-buttons" style="display: none;">
+        <button id="cashout-button">Cash Out</button>
+        <button id="go-button">GO</button>
+      </div>
+    </div>
+    <div id="message"></div>
+  </div>
+</section>
+    
     </main>
   </div>
 
@@ -51,5 +70,6 @@
   </footer>
 
   <script src="scripts/main.js"></script>
+  <script src="scripts/chicken.js"></script>
 </body>
 </html>

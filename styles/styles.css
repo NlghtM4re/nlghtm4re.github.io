@@ -180,6 +180,8 @@ section {
     text-align: center;
     transition: transform 0.2s ease;
     cursor: pointer;
+    color: white;
+    text-decoration: none;
 }
 
 .game-card:hover {
@@ -200,18 +202,19 @@ section {
 /* Slot Game Styles */
 .slot-game {
     text-align: center;
-    padding: 20px;
     background-color: #0f172a;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    margin: 20px auto;
-    max-width: 600px;
+    margin: auto;
+    max-width: 800px;
+    width: 800px;
 }
 
 .slot-game h2 {
     font-size: 32px;
     color: #10b981;
     margin-bottom: 20px;
+    margin-top: 0;
 }
 
 .slot-reels {

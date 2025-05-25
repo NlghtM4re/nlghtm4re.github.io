@@ -31,18 +31,21 @@
 
     <main class="main-content"> 
 
-      <section id="games-section" class="games-section">
-        <h2>All Games</h2>
-        <div class="games-grid">
-          <a class="game-card" href="slot.html"><h3>Slot</h3><span>Try now</span></a>
-          <a class="game-card" href="chicken.html"><h3>Chicken</h3><span>Try now</span></a>
-          <a class="game-card" href="#"><h3>Mine</h3><span>Coming Soon...</span></a>
-          <a class="game-card" href="#"><h3>Roulette</h3><span>Coming soon...</span></a>
-          <a class="game-card" href="#"><h3>Blackjack</h3><span>Coming soon...</span></a>
-          <a class="game-card" href="#"><h3>Red or Black</h3><span>Coming soon...</span></a>
+      <section id="loan-section">
+        <h2>Loan</h2>
+        <div class="loan">
+          <p>-You can only have loan when you have less than 100 credits <br>
+         -You will have to pay your dept back<br>
+         -When having a dept,  50% of your casino winning is going to be use for your dept.<br>
+         -There is a maximum of 100 credits per loan<br></p>
+          <button onclick="takeLoan(100)">Take $100 Loan</button>
+          <br><br>
+          <label for="payment-amount">Payment Amount</label>
+          <input type="number" id="payment-amount" min="0" />
+          <button onclick="payLoan()">Pay Loan</button>
         </div>
       </section>
-
+    
     </main>
   </div>
 
@@ -51,5 +54,6 @@
   </footer>
 
   <script src="scripts/main.js"></script>
+  <script src="scripts/bank.js"></script>
 </body>
 </html>
