@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Crazy Casino</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles/styles.css" />
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <nav>
+        <ul>
+          <li style="padding-top: 0;"><a>­<button class="toggle-sidebar" onclick="toggleSidebar()">☰</button></a></li>
+          <li><a href="index.html" >🎮 <span>All Games</span></a></li>
+          <li><a href="slot.html" >🍉 <span>Slot</span></a></li>
+          <li><a href="chicken.html" >🐔 <span>Chicken Road</span></a></li>
+          <li><a href="mines.html" >💣 <span>Mines</span></a></li>
+          <li><a href="bank.html" >💳 <span>Bank</span></a></li>
+          <li><a href="help.html" >❓ <span>Help</span></a></li>
+          <li><a href="update.html" >❕ <span>Update</span></a></li>
+        </ul>
+      </nav>
+    </aside>
+    <div class="dept-display">Debt: <span id="debt">0</span></div>
+    <header class="top-bar">
+      <div class="logo">Crazy Casino</div>
+      <div class="credit-display">Credits: <span id="credits"></span></div>
+    </header>
+    <footer>
+      © 2025 Crazy Casino | <a href="#">Terms</a> | <a href="#">Privacy</a> | <a href="#">Support</a>
+    </footer>
+
+    <main class="main-content"> 
+
+      <section id="mines-section" class="mines-section">
+        <h1>Mine Game</h1>
+              <div class="game-box">
+                <div class="game-controls-row">
+                    <div class="mine-controls">
+                    <div class="bet-controls">
+                        <label for="bet">Bet Amount</label>
+                        <button id="min-bet-btn" onclick="setMinBet()">MIN</button>
+                        <input type="number" id="bet" placeholder="$1" min="0.01" step="0.01" value="1" />
+                        <button id="max-bet-btn" onclick="setMaxBet()">MAX</button>
+                    </div>
+                    <div class="bomb-controls">
+                        <label>Bombs</label>
+                        <button onclick="decreaseBombs()">-</button>
+                        <span id="bomb-count">5</span>
+                        <button onclick="increaseBombs()">+</button>
+                        <span style="margin-left:10px;">Tile Multiplier: <span id="pre-game-multiplier">1.20x</span></span>
+                    </div>
+                    <button id="start-game-btn" onclick="startGame()">Start Game</button>
+                    <button id="stop-game-btn" onclick="stopGame()" style="display:none;">Stop Game</button>
+                    </div>
+                </div>
+                <div class="game-main-row">
+                    <div class="game-details">
+                    <p>Tiles left: <span id="tiles-left">0</span></p>
+                    <p>Mine risk: <span id="mine-risk">0%</span></p>
+                    <p>Opened tiles: <span id="opened-tiles">0</span></p>
+                    <p>Potential multiplier: <span id="potential-multiplier">1.00x</span></p>
+                    <p>Potential earnings: <span id="potential-earnings">$0.00</span></p>
+                    </div>
+                    <div class="game-grid-container">
+                    <div id="game"></div>
+                    </div>
+                </div>
+                <div id="message"></div>
+                </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="scripts/main.js"></script>
+  <script src="scripts/mines.js"></script>
+</body>
+</html>

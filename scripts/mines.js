@@ -1,0 +1,205 @@
+let gridSize = 5; // Fixed grid size
+let bombCount = 5; // Default number of bombs
+let revealedCount = 0;
+let gameOver = false;
+let gameBoard = [];
+let currentBet = 1;
+let multiplier = 1.0;
+
+function setMinBet() {
+    document.getElementById('bet').value = 0.01;
+}
+
+function setMaxBet() {
+    document.getElementById('bet').value = credits; // Assuming `credits` is defined elsewhere
+}
+
+function increaseBombs() {
+    if (bombCount < 24) { // Max 24 bombs
+        bombCount++;
+        document.getElementById('bomb-count').textContent = bombCount;
+        updatePreGameMultiplier();
+    }
+}
+
+function decreaseBombs() {
+    if (bombCount > 1) {
+        bombCount--;
+        document.getElementById('bomb-count').textContent = bombCount;
+        updatePreGameMultiplier();
+    }
+}
+
+function setControlsDisabled(disabled) {
+    document.getElementById('bet').disabled = disabled;
+    document.getElementById('min-bet-btn').disabled = disabled;
+    document.getElementById('max-bet-btn').disabled = disabled;
+    // Bomb controls
+    const bombButtons = document.querySelectorAll('.bomb-controls button');
+    bombButtons.forEach(btn => btn.disabled = disabled);
+}
+
+function startGame() {
+    currentBet = parseFloat(document.getElementById('bet').value);
+
+    if (isNaN(currentBet) || currentBet <= 0 || currentBet > credits) {
+        displayMessage("Invalid bet amount or insufficient credits!");
+        return;
+    }
+
+    updateCredits(-currentBet);
+    revealedCount = 0;
+    gameOver = false;
+    gameBoard = [];
+    multiplier = 1.0;
+
+    // Toggle buttons
+    document.getElementById('start-game-btn').style.display = 'none';
+    const stopBtn = document.getElementById('stop-game-btn');
+    stopBtn.style.display = '';
+    stopBtn.textContent = 'Cash Out';
+
+    // Disable controls
+    setControlsDisabled(true);
+
+    const totalTiles = gridSize * gridSize;
+    const bombIndices = new Set();
+
+    while (bombIndices.size < bombCount) {
+        bombIndices.add(Math.floor(Math.random() * totalTiles));
+    }
+
+    const game = document.getElementById('game');
+    game.innerHTML = '';
+    game.style.gridTemplateColumns = `repeat(${gridSize}, 1fr)`;
+    game.style.gridTemplateRows = `repeat(${gridSize}, 1fr)`;
+
+    for (let i = 0; i < totalTiles; i++) {
+        const tile = document.createElement('div');
+        tile.classList.add('tile');
+        tile.dataset.index = i;
+        tile.onclick = () => revealTile(i, tile);
+        gameBoard[i] = bombIndices.has(i) ? 'bomb' : 'safe';
+        game.appendChild(tile);
+    }
+
+    updateGameDetails();
+    displayMessage("Game started! Click on tiles to reveal them.");
+}
+
+function getTileMultiplier() {
+    // Probability-based multiplier: odds of picking a safe tile
+    const totalTiles = gridSize * gridSize;
+    const safeTiles = totalTiles - bombCount;
+    // The multiplier for revealing one safe tile:
+    // (tiles left) / (safe tiles left)
+    // To make it more rewarding, add a small house edge (e.g., 0.98)
+    const tilesLeft = totalTiles - revealedCount;
+    const safeTilesLeft = safeTiles - revealedCount;
+    if (safeTilesLeft <= 0) return 0; // Avoid division by zero
+    const houseEdge = 0.98; // 2% house edge
+    return (tilesLeft / safeTilesLeft) * houseEdge;
+}
+
+function updatePreGameMultiplier() {
+    const preGameMultiplier = getTileMultiplier();
+    document.getElementById('pre-game-multiplier').textContent = `${preGameMultiplier.toFixed(2)}x`;
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    updatePreGameMultiplier();
+    renderDisabledGrid();
+});
+
+
+function revealTile(index, tileEl) {
+    if (gameOver || tileEl.classList.contains('revealed')) return;
+
+    const tile = gameBoard[index];
+    if (tile === 'bomb') {
+        tileEl.classList.add('bomb');
+        tileEl.textContent = '';
+        displayMessage("Boom! You hit a bomb. Game over!");
+        gameOver = true;
+        revealAllBombs();
+
+        // Show Start button, hide Cash Out, re-enable controls
+        document.getElementById('start-game-btn').style.display = '';
+        document.getElementById('stop-game-btn').style.display = 'none';
+        setControlsDisabled(false);
+
+        // Do NOT call renderDisabledGrid() here
+    } else {
+        tileEl.classList.add('revealed');
+        revealedCount++;
+        multiplier *= getTileMultiplier(); // Use dynamic multiplier
+        updateGameDetails();
+        displayMessage(`You revealed a safe tile! Multiplier: ${multiplier.toFixed(2)}x`);
+    }
+}
+
+function revealAllBombs() {
+    const game = document.getElementById('game');
+    for (let i = 0; i < gameBoard.length; i++) {
+        if (gameBoard[i] === 'bomb') {
+            const tile = game.children[i];
+            tile.classList.add('bomb');
+            tile.textContent = '';
+        }
+    }
+}
+
+function stopGame() {
+    if (gameOver) return;
+
+    gameOver = true;
+    revealAllBombs();
+    const totalReward = currentBet * multiplier;
+    updateCredits(totalReward);
+    displayMessage(`Game stopped. You earned $${totalReward.toFixed(2)}!`);
+
+    // Toggle buttons back and re-enable controls
+    document.getElementById('start-game-btn').style.display = '';
+    document.getElementById('stop-game-btn').style.display = 'none';
+    setControlsDisabled(false);
+
+    // Do NOT call renderDisabledGrid() here
+}
+
+function updateGameDetails() {
+    const tilesLeft = gridSize * gridSize - revealedCount;
+    const risk = (bombCount / tilesLeft) * 100;
+
+    document.getElementById('tiles-left').textContent = tilesLeft;
+    document.getElementById('mine-risk').textContent = `${risk.toFixed(2)}%`;
+    document.getElementById('opened-tiles').textContent = revealedCount;
+    document.getElementById('potential-multiplier').textContent = `${multiplier.toFixed(2)}x`;
+    document.getElementById('potential-earnings').textContent = `$${(currentBet * multiplier).toFixed(2)}`;
+}
+
+function displayMessage(message) {
+    const messageEl = document.getElementById('message');
+    messageEl.textContent = message;
+}
+
+
+function renderDisabledGrid() {
+    const totalTiles = gridSize * gridSize;
+    const game = document.getElementById('game');
+    game.innerHTML = '';
+    game.style.gridTemplateColumns = `repeat(${gridSize}, 1fr)`;
+    game.style.gridTemplateRows = `repeat(${gridSize}, 1fr)`;
+
+    for (let i = 0; i < totalTiles; i++) {
+        const tile = document.createElement('div');
+        tile.classList.add('tile', 'disabled-tile');
+        tile.dataset.index = i;
+        // No click handler
+        game.appendChild(tile);
+    }
+
+    // Ensure buttons are reset if grid is rendered outside stopGame
+    document.getElementById('start-game-btn').style.display = '';
+    document.getElementById('stop-game-btn').style.display = 'none';
+    setControlsDisabled(false);
+}
