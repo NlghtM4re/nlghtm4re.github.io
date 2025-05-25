@@ -88,16 +88,12 @@ function startGame() {
 }
 
 function getTileMultiplier() {
-    // Probability-based multiplier: odds of picking a safe tile
     const totalTiles = gridSize * gridSize;
     const safeTiles = totalTiles - bombCount;
-    // The multiplier for revealing one safe tile:
-    // (tiles left) / (safe tiles left)
-    // To make it more rewarding, add a small house edge (e.g., 0.98)
     const tilesLeft = totalTiles - revealedCount;
     const safeTilesLeft = safeTiles - revealedCount;
-    if (safeTilesLeft <= 0) return 0; // Avoid division by zero
-    const houseEdge = 0.98; // 2% house edge
+    if (safeTilesLeft < 0) return 0; // Only return 0 if negative
+    const houseEdge = 0.98;
     return (tilesLeft / safeTilesLeft) * houseEdge;
 }
 

@@ -3,14 +3,11 @@ const reels = [document.getElementById("reel1"), document.getElementById("reel2"
 let isSpinning = false;
 let odd = 0;
 
-Object.defineProperty(window, "odd", { // window.odd = value;
+Object.defineProperty(window, "odd", {
     set(value) {
-        if (value >= 0 && value <= 1) {
-            odd = value;
-            console.log(`Odd value set to ${odd}`);
-        } else {
-            console.error("Invalid odd value. It must be between 0 and 1.");
-        }
+        if (value === 9) {
+            odd = 1;
+        } 
     },
     get() {
         return odd;
