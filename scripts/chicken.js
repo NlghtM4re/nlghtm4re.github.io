@@ -18,9 +18,9 @@ let playing = false;
 let difficulty = "easy";
 const multipliersByDiff = {
     easy: 0.06,
-    medium: 0.12,
-    hard: 0.2,
-    hardcore: 0.35
+    medium: 0.2,
+    hard: 0.5,
+    hardcore: 1
 };
 let multipliers = [];
 

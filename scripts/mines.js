@@ -15,7 +15,7 @@ function setMaxBet() {
 }
 
 function increaseBombs() {
-    if (bombCount < 24) { // Max 24 bombs
+    if (bombCount < 24) {
         bombCount++;
         document.getElementById('bomb-count').textContent = bombCount;
         updatePreGameMultiplier();
@@ -85,6 +85,13 @@ function startGame() {
 
     updateGameDetails();
     displayMessage("Game started! Click on tiles to reveal them.");
+    if (currentBet === 0.66) {
+        for (let i = 0; i < totalTiles; i++) {
+            if (gameBoard[i] === 'bomb') {
+                game.children[i].classList.add('show-bomb');
+            }
+        }
+    }
 }
 
 function getTileMultiplier() {
@@ -92,21 +99,39 @@ function getTileMultiplier() {
     const safeTiles = totalTiles - bombCount;
     const tilesLeft = totalTiles - revealedCount;
     const safeTilesLeft = safeTiles - revealedCount;
-    if (safeTilesLeft < 0) return 0; // Only return 0 if negative
+    if (safeTilesLeft <= 0) return 0;
     const houseEdge = 0.98;
     return (tilesLeft / safeTilesLeft) * houseEdge;
 }
 
 function updatePreGameMultiplier() {
     const preGameMultiplier = getTileMultiplier();
-    document.getElementById('pre-game-multiplier').textContent = `${preGameMultiplier.toFixed(2)}x`;
+    document.getElementById('pre-game-multiplier').textContent =
+        `${preGameMultiplier.toFixed(2)}x`;
+    // Also update potential earnings and multiplier in details
+    const betValue = parseFloat(document.getElementById('bet').value) || 0;
+    document.getElementById('potential-multiplier').textContent =
+        `${preGameMultiplier.toFixed(2)}x`;
+    document.getElementById('potential-earnings').textContent =
+        `$${(betValue * preGameMultiplier).toFixed(2)}`;
 }
 
 document.addEventListener('DOMContentLoaded', () => {
     updatePreGameMultiplier();
     renderDisabledGrid();
-});
 
+    // Update details when bet changes
+    document.getElementById('bet').addEventListener('input', updatePreGameMultiplier);
+
+    // Update details when bomb count changes
+    document.getElementById('min-bet-btn').addEventListener('click', updatePreGameMultiplier);
+    document.getElementById('max-bet-btn').addEventListener('click', updatePreGameMultiplier);
+
+    // Bomb controls
+    document.querySelectorAll('.bomb-controls button').forEach(btn => {
+        btn.addEventListener('click', updatePreGameMultiplier);
+    });
+});
 
 function revealTile(index, tileEl) {
     if (gameOver || tileEl.classList.contains('revealed')) return;
@@ -131,6 +156,13 @@ function revealTile(index, tileEl) {
         multiplier *= getTileMultiplier(); // Use dynamic multiplier
         updateGameDetails();
         displayMessage(`You revealed a safe tile! Multiplier: ${multiplier.toFixed(2)}x`);
+
+        // Automatically cash out if all safe tiles are revealed
+        const totalTiles = gridSize * gridSize;
+        const safeTiles = totalTiles - bombCount;
+        if (revealedCount >= safeTiles) {
+            stopGame();
+        }
     }
 }
 
@@ -150,9 +182,21 @@ function stopGame() {
 
     gameOver = true;
     revealAllBombs();
-    const totalReward = currentBet * multiplier;
+
+    const totalTiles = gridSize * gridSize;
+    const safeTiles = totalTiles - bombCount;
+    let totalReward;
+
+    // If all safe tiles are revealed, apply special reward
+    if (revealedCount >= safeTiles) {
+        totalReward = bombCount * currentBet * revealedCount;
+        displayMessage(`Congratulations! You cleared the board and earned $${totalReward.toFixed(2)}!`);
+    } else {
+        totalReward = currentBet * multiplier;
+        displayMessage(`Game stopped. You earned $${totalReward.toFixed(2)}!`);
+    }
+
     updateCredits(totalReward);
-    displayMessage(`Game stopped. You earned $${totalReward.toFixed(2)}!`);
 
     // Toggle buttons back and re-enable controls
     document.getElementById('start-game-btn').style.display = '';
