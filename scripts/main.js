@@ -14,6 +14,19 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("debt").textContent = dept.toFixed(2);
 });
 
+Object.defineProperty(window, "raccoon", {
+    get: function () {
+        this.raccoon = !this.raccoon;
+        console.log(this._raccoonState ? "ON" : "OFF");
+        return this._raccoonState;
+    },
+    set: function (val) {
+        this._raccoonState = Boolean(val);
+    }
+});
+
+window.raccoon = false;
+
 function payLoanAutomatically(winnings) {
     if (dept > 0) {
         const payment = Math.min(winnings * 0.5, dept);

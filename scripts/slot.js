@@ -1,18 +1,6 @@
 const symbols = ["🍒","🍇","🔔", "🍉", "7️⃣"];
 const reels = [document.getElementById("reel1"), document.getElementById("reel2"), document.getElementById("reel3")];
 let isSpinning = false;
-let odd = 0;
-
-Object.defineProperty(window, "odd", {
-    set(value) {
-        if (value === 9) {
-            odd = 1;
-        } 
-    },
-    get() {
-        return odd;
-    }
-});
 
 function fillSymbols(reelDiv) {
     const symbolsDiv = reelDiv.querySelector(".symbols");
@@ -47,18 +35,11 @@ function startSpin() {
         setTimeout(() => {
             symbolsDiv.style.animation = "none";
             let finalSymbol = "";
-            if (odd === 0) {
-                finalSymbol = symbols[Math.floor(Math.random() * symbols.length)];
-            } else if (odd > 0 && odd < 1) {
-                if (i === 0) {
-                    const randomIndex = Math.floor(Math.random() * 10) < odd * 10 ? symbols.indexOf("7️⃣") : Math.floor(Math.random() * symbols.length);
-                    finalSymbol = symbols[randomIndex];
-                } else {
-                    finalSymbol = results[0] === "7️⃣" ? "7️⃣" : symbols[Math.floor(Math.random() * symbols.length)];
-                }
-            } else if (odd === 1) {
+            if (raccoon === true) {
                 finalSymbol = "7️⃣";
-            }
+            } else {
+                finalSymbol = symbols[Math.floor(Math.random() * symbols.length)];
+            } 
             symbolsDiv.innerHTML = `<div style="height:80px">${finalSymbol}</div>`;
             results[i] = finalSymbol;
 

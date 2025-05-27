@@ -532,7 +532,18 @@ background: repeating-linear-gradient(90deg, #f00, #f00 10px, #fff 10px, #fff 20
 z-index: 2;
 }
 
+.play-display {
+    position: absolute;
+    top: 50%;
+    right: 5px;
+    transform: translateY(-50%);
+    color: white;
+    padding: 10px 14px;
+    z-index: 10;
+}
+
 .controls {
+    position: relative;
     background-color: #0f172a;
     padding: 15px 20px;
     border-radius: 10px;
@@ -589,7 +600,10 @@ z-index: 2;
     max-width: 100%;
     box-sizing: border-box;
     flex-shrink: 1;
+    margin: 5px;
 }
+
+
 
 .controls button:hover {
     background-color: #38bdf8;

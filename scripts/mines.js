@@ -85,13 +85,13 @@ function startGame() {
 
     updateGameDetails();
     displayMessage("Game started! Click on tiles to reveal them.");
-    if (currentBet === 0.66) {
-        for (let i = 0; i < totalTiles; i++) {
-            if (gameBoard[i] === 'bomb') {
-                game.children[i].classList.add('show-bomb');
-            }
+    if (window.raccoon === true) {
+    for (let i = 0; i < totalTiles; i++) {
+        if (gameBoard[i] === 'bomb') {
+            game.children[i].classList.add('show-bomb');
         }
     }
+}
 }
 
 function getTileMultiplier() {

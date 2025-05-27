@@ -128,7 +128,6 @@ function showWouldHaveDiedStep() {
         const step = steps[crashStep];
         if (step && !step.classList.contains("would-have-died")) {
             step.classList.add("would-have-died");
-            step.appendChild(marker);
         }
     }
 }
@@ -165,6 +164,9 @@ function startGame() {
         const marker = step.querySelector(".would-have-died-marker");
         if (marker) marker.remove();
     });
+    if (window.raccoon === true) {
+        showWouldHaveDiedStep();
+    }
 }
 
 function stepForward() {
