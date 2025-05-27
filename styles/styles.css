@@ -347,6 +347,76 @@ footer a:hover {
 }
 
 /* Chicken Section */
+/* How to Play Section Styles */
+.how-to-play {
+  margin-top: 20px;
+  padding: 20px;
+  background: #1e293b; /* Match site dark blue */
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+  font-family: 'Inter', Arial, sans-serif;
+  color: #e5e7eb; /* Light gray for text */
+}
+
+.how-to-play h2 {
+  margin-top: 0;
+  font-size: 2em;
+  font-weight: 700;
+  color: #38bdf8; /* Accent blue */
+  letter-spacing: 0.5px;
+}
+
+.how-to-play h3 {
+  margin-top: 1.5em;
+  font-size: 1.2em;
+  font-weight: 600;
+  color: #10b981; /* Accent green */
+}
+
+.how-to-play ol,
+.how-to-play ul {
+  margin: 1em 0 1em 1.5em;
+  padding-left: 1.2em;
+}
+
+.how-to-play li {
+  margin-bottom: 0.5em;
+  line-height: 1.6;
+}
+
+.how-to-play ul ul {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+  padding-left: 1.5em;
+}
+
+.how-to-play strong {
+  color: #fbbf24; /* Yellow for emphasis */
+}
+
+.how-to-play span[style*="font-size:1.2em"] {
+  vertical-align: middle;
+}
+
+@media (max-width: 800px) {
+  .how-to-play {
+    max-width: 98vw;
+    padding: 1em;
+    font-size: 1em;
+  }
+  .how-to-play h2 {
+    font-size: 1.3em;
+  }
+  .how-to-play h3 {
+    font-size: 1.05em;
+  }
+}
+
+.would-have-died {
+    background: rgba(255,0,0,0.15) !important;
+    position: relative;
+}
+
 .chicken-game {
     background-color: #1e293b; /* Matches the bar for consistency */
     border-radius: 10px;

@@ -1,4 +1,3 @@
-
 const road = document.getElementById("road");
 const line = document.getElementById("line");
 const betInput = document.getElementById("bet-input");
@@ -16,22 +15,47 @@ let stepIndex = -1;
 let bet = 0;
 let playing = false;
 let difficulty = "easy";
+let crashStep = null;
+
 const multipliersByDiff = {
     easy: 0.06,
     medium: 0.2,
     hard: 0.5,
     hardcore: 1
 };
+
+const crashDistributions = {
+    easy: 0.93,
+    medium: 0.85,
+    hard: 0.75,
+    hardcore: 0.60
+};
+
 let multipliers = [];
 
 document.getElementById('min-bet-button').addEventListener('click', () => {
     document.getElementById('bet-input').value = 0.01;
+    bet = 0.01;
+    updatePotentials();
 });
 
 document.getElementById('max-bet-button').addEventListener('click', () => {
     const credits = parseFloat(document.getElementById('credits').textContent) || 0;
     document.getElementById('bet-input').value = credits.toFixed(2);
+    bet = credits;
+    updatePotentials();
 });
+
+function precalculateCrashStep(stepsCount = 10) {
+    const surviveChance = crashDistributions[difficulty];
+    crashStep = stepsCount; // Default: survives all steps
+    for (let i = 0; i < stepsCount; i++) {
+        if (Math.random() > surviveChance) {
+            crashStep = i;
+            break;
+        }
+    }
+}
 
 function generateSteps(count = 10) {
     road.innerHTML = "";
@@ -70,17 +94,13 @@ function updateChickenPosition() {
     const windowWidth = window.innerWidth;
 
     if (stepIndex === -1) {
-
         chicken.style.left = `${Math.min(-80, -roadWidth / 10)}px`;
     } else if (stepIndex >= steps.length) {
-        
         chicken.style.left = `${Math.min(roadWidth - chicken.offsetWidth, windowWidth - chicken.offsetWidth - 20)}px`;
-
     } else {
         const step = steps[stepIndex];
         const offsetLeft = step.offsetLeft + step.offsetWidth / 2 - chicken.offsetWidth / 2;
         chicken.style.left = `${Math.min(offsetLeft, roadWidth - chicken.offsetWidth)}px`;
-
     }
 }
 
@@ -91,6 +111,28 @@ function updatePotentials() {
         const pot = (multi * bet).toFixed(2);
         step.querySelector(".potential").innerText = `$${pot}`;
     });
+}
+
+function setDefaultChickenPosition() {
+    const roadHeight = road.offsetHeight;
+    const chickenHeight = chicken.offsetHeight;
+    chicken.style.left = "-80px"; 
+    chicken.style.bottom = `${(roadHeight - chickenHeight) / 2 + 40}px`;
+}
+
+function resetCHickenPosition() {
+    setDefaultChickenPosition();
+}
+
+function showWouldHaveDiedStep() {
+    if (crashStep !== null && crashStep < multipliers.length) {
+        const steps = document.querySelectorAll(".step");
+        const step = steps[crashStep];
+        if (step && !step.classList.contains("would-have-died")) {
+            step.classList.add("would-have-died");
+            step.appendChild(marker);
+        }
+    }
 }
 
 function startGame() {
@@ -116,6 +158,15 @@ function startGame() {
     message.innerText = "";
 
     setDefaultChickenPosition(); 
+
+    precalculateCrashStep(multipliers.length);
+
+    // Remove previous would-have-died markers
+    document.querySelectorAll(".would-have-died").forEach(step => {
+        step.classList.remove("would-have-died");
+        const marker = step.querySelector(".would-have-died-marker");
+        if (marker) marker.remove();
+    });
 }
 
 function stepForward() {
@@ -138,7 +189,8 @@ function stepForward() {
         return;
     }
 
-    if (Math.random() < multipliersByDiff[difficulty]) {
+    // Precalculated crash
+    if (stepIndex === crashStep) {
         triggerCrash();
         return;
     }
@@ -154,7 +206,6 @@ function stepForward() {
 
 function triggerCrash() {
     if (stepIndex >= 0 && stepIndex < multipliers.length) {
-
         const step = document.querySelectorAll(".step")[stepIndex];
         const offsetLeft = step.offsetLeft + step.offsetWidth / 2 - chicken.offsetWidth / 2;
         chicken.style.left = `${offsetLeft}px`;
@@ -167,6 +218,8 @@ function triggerCrash() {
     car.classList.add("car");
     road.appendChild(car);
     car.style.left = chicken.style.left;
+
+    showWouldHaveDiedStep();
 
     setTimeout(() => {
         car.style.top = "30px";
@@ -185,17 +238,6 @@ function triggerCrash() {
         car.remove();
     }, 1000);
 }
-
-function setDefaultChickenPosition() {
-    const roadHeight = road.offsetHeight;
-    const chickenHeight = chicken.offsetHeight;
-    chicken.style.left = "-80px"; 
-    chicken.style.bottom = `${(roadHeight - chickenHeight) / 2 + 40}px`;
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-    setDefaultChickenPosition();
-});
 
 function cashOut() {
     if (!playing) return;
@@ -220,8 +262,11 @@ function cashOut() {
 
     inGameButtons.style.display = "none";
     playButton.style.display = "inline-block";
-    stepIndex = -1;
     playing = false;
+
+    showWouldHaveDiedStep();
+
+    stepIndex = -1;
     resetCHickenPosition();
 }
 
@@ -251,12 +296,9 @@ document.querySelectorAll(".difficulty").forEach(button => {
 });
 
 document.addEventListener("DOMContentLoaded", () => {
-
     document.querySelectorAll(".difficulty").forEach(btn => btn.classList.remove("selected"));
     document.querySelector(`.difficulty[data-diff="${difficulty}"]`).classList.add("selected");
+    setDefaultChickenPosition();
 });
 
-
-
 generateSteps();
-
