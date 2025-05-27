@@ -219,8 +219,6 @@ function triggerCrash() {
     road.appendChild(car);
     car.style.left = chicken.style.left;
 
-    showWouldHaveDiedStep();
-
     setTimeout(() => {
         car.style.top = "30px";
     }, 50);
