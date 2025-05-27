@@ -190,13 +190,14 @@ function stopGame() {
     // If all safe tiles are revealed, apply special reward
     if (revealedCount >= safeTiles) {
         totalReward = bombCount * currentBet * revealedCount;
+        
         displayMessage(`Congratulations! You cleared the board and earned $${totalReward.toFixed(2)}!`);
     } else {
         totalReward = currentBet * multiplier;
         displayMessage(`Game stopped. You earned $${totalReward.toFixed(2)}!`);
     }
 
-    updateCredits(totalReward);
+    updateCredits(payLoanAutomatically(parseFloat(totalReward) || 0));
 
     // Toggle buttons back and re-enable controls
     document.getElementById('start-game-btn').style.display = '';

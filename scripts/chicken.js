@@ -60,33 +60,31 @@ function precalculateCrashStep(stepsCount = 10) {
 function generateSteps(count = 10) {
     road.innerHTML = "";
     multipliers = [];
+
+    let baseMultiplier = 1;
+    let growthFactor = multipliersByDiff[difficulty];
+
     for (let i = 0; i < count; i++) {
         const step = document.createElement("div");
         step.classList.add("step");
 
-        let baseMultiplier = 1.1; 
-        let growthFactor = multipliersByDiff[difficulty];
-        let multi = (baseMultiplier * Math.pow(1 + growthFactor, i)).toFixed(2);
+        let multi = (baseMultiplier * Math.pow(1 + growthFactor, i + 1)).toFixed(2);
         multipliers.push(parseFloat(multi));
 
         step.innerHTML = `
-        <div class="multiplier">${multi}x</div>
-        <div class="potential">$0.00</div>
+            <div class="multiplier">${multi}x</div>
+            <div class="potential">$0.00</div>
         `;
         road.appendChild(step);
 
         const line = document.createElement("div");
         line.classList.add("line");
         road.appendChild(line);
-
-        if (i === 0) {
-            const startLine = document.createElement("div");
-            startLine.classList.add("line");
-            road.insertBefore(startLine, road.firstChild);
-        }
     }
+
     road.appendChild(chicken);
 }
+
 
 function updateChickenPosition() {
     const steps = document.querySelectorAll(".step");
