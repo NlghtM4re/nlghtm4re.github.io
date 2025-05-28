@@ -9,6 +9,45 @@ const message = document.getElementById("message");
 
 let chicken = document.createElement("div");
 chicken.classList.add("chicken");
+chicken.innerHTML = `
+  <div class="head">
+    <div class="comb">
+      <div class="comb-lobe l1"></div>
+      <div class="comb-lobe l2"></div>
+      <div class="comb-lobe l3"></div>
+    </div>
+  </div>
+
+  <div class="tail">
+    <div class="feather feather1"></div>
+    <div class="feather feather2"></div>
+    <div class="feather feather3"></div>
+  </div>
+
+  <div class="body">
+    <div class="belly"></div>
+  </div>
+
+  <div class="wing"></div>
+
+  <div class="eye">
+    <div class="pupil"></div>
+    <div class="shine"></div>
+  </div>
+
+  <div class="beak-top"></div>
+  <div class="beak-bottom"></div>
+
+  <div class="comb comb1"></div>
+  <div class="comb comb2"></div>
+
+  <div class="leg leg-left">
+    <div class="foot"></div>
+  </div>
+  <div class="leg leg-right">
+    <div class="foot"></div>
+  </div>
+`;
 road.appendChild(chicken);
 
 let stepIndex = -1;
@@ -85,11 +124,12 @@ function generateSteps(count = 10) {
     road.appendChild(chicken);
 }
 
-
 function updateChickenPosition() {
     const steps = document.querySelectorAll(".step");
     const roadWidth = road.offsetWidth;
     const windowWidth = window.innerWidth;
+
+    chicken.style.top = '120px';
 
     if (stepIndex === -1) {
         chicken.style.left = `${Math.min(-80, -roadWidth / 10)}px`;
@@ -97,10 +137,15 @@ function updateChickenPosition() {
         chicken.style.left = `${Math.min(roadWidth - chicken.offsetWidth, windowWidth - chicken.offsetWidth - 20)}px`;
     } else {
         const step = steps[stepIndex];
-        const offsetLeft = step.offsetLeft + step.offsetWidth / 2 - chicken.offsetWidth / 2;
+        let offsetLeft = step.offsetLeft + step.offsetWidth / 2 - chicken.offsetWidth / 2;
+
+        offsetLeft -= 40;
+
         chicken.style.left = `${Math.min(offsetLeft, roadWidth - chicken.offsetWidth)}px`;
     }
 }
+
+
 
 function updatePotentials() {
     const steps = document.querySelectorAll(".step");
@@ -114,8 +159,8 @@ function updatePotentials() {
 function setDefaultChickenPosition() {
     const roadHeight = road.offsetHeight;
     const chickenHeight = chicken.offsetHeight;
-    chicken.style.left = "-80px"; 
-    chicken.style.bottom = `${(roadHeight - chickenHeight) / 2 + 40}px`;
+    chicken.style.left = "-150px"; 
+    chicken.style.bottom = `${(roadHeight - chickenHeight) / 2 + 30}px`;
 }
 
 function resetCHickenPosition() {
@@ -207,7 +252,11 @@ function stepForward() {
 function triggerCrash() {
     if (stepIndex >= 0 && stepIndex < multipliers.length) {
         const step = document.querySelectorAll(".step")[stepIndex];
-        const offsetLeft = step.offsetLeft + step.offsetWidth / 2 - chicken.offsetWidth / 2;
+        let offsetLeft = step.offsetLeft + step.offsetWidth / 2 - chicken.offsetWidth / 2;
+
+        // Apply same -40 offset as in updateChickenPosition
+        offsetLeft -= 40;
+
         chicken.style.left = `${offsetLeft}px`;
         chicken.style.bottom = "20px"; 
     }
@@ -215,9 +264,23 @@ function triggerCrash() {
     playing = false;
 
     const car = document.createElement("div");
+    car.innerHTML = `
+        <div class="window"></div>
+
+        <!-- Roues -->
+        <div class="wheel wheel-front-left"></div>
+        <div class="wheel wheel-front-right"></div>
+        <div class="wheel wheel-back-left"></div>
+        <div class="wheel wheel-back-right"></div>
+
+        <!-- Feux arrière -->
+        <div class="light left-light"></div>
+        <div class="light right-light"></div>
+    `;
     car.classList.add("car");
     road.appendChild(car);
     car.style.left = chicken.style.left;
+    car.style.left = `${parseFloat(car.style.left) + 10}px`; // Start car slightly off-screen
 
     setTimeout(() => {
         car.style.top = "30px";

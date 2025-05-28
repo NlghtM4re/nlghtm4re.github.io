@@ -446,6 +446,7 @@ footer a:hover {
     height: 200px;
     background: #999;
     display: block; /* Ensure sidewalks are displayed */
+    z-index: 900;
 }
 
 /* Road */
@@ -497,13 +498,7 @@ z-index: 0;
 }
 
 .chicken {
-    position: absolute;
-    bottom: 20px;
-    left: -100px;
-    width: 60px;
-    height: 60px;
-    background: white;
-    border-radius: 50%;
+    position: absolute;     
     z-index: 2000;
     transition: left 0.4s ease;
     display: flex;
