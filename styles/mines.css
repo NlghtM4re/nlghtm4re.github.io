@@ -1,0 +1,262 @@
+.control-section {
+    background: #232323;
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin-right: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 1px 4px #0002;
+    flex-wrap: wrap;
+}
+.control-section strong {
+    margin-right: 8px;
+    color: #ffd600;
+    font-size: 1.05em;
+}
+
+.game-box {
+    border: 3px solid #333;
+    border-radius: 16px;
+    background: #181818;
+    padding: 24px 32px;
+    margin: 32px auto;
+    max-width: 1000px;
+    box-shadow: 0 4px 32px #000a;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    max-width: 1000px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 16px;
+    box-sizing: border-box;
+    z-index: 1000;
+}
+.game-controls-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 24px;
+}
+.mine-controls {
+    display: flex;
+    flex-direction: row;
+    gap: 18px;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+.bet-controls, .bomb-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+#start-game-btn, #stop-game-btn {
+    padding: 8px 18px;
+    border-radius: 6px;
+    border: none;
+    background: #4caf50;
+    color: #fff;
+    font-weight: bold;
+    cursor: pointer;
+    margin-left: 12px;
+    transition: background 0.2s;
+}
+#stop-game-btn {
+    background: #e53935;
+}
+#start-game-btn[disabled], #stop-game-btn[disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+.game-main-row {
+    display: flex;
+    flex-direction: row;
+    gap: 32px;
+    align-items: flex-start;
+    z-index: 1001;
+}
+.game-details {
+    height: 250px;
+    background: #222;
+    border-radius: 10px;
+    padding: 16px 18px;
+    color: #fff;
+    font-size: 1rem;
+    box-shadow: 0 2px 8px #0003;
+    text-align: left;
+    font-size: 14px;
+    color: #94a3b8;
+}
+
+.game-grid-container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#game {
+    display: grid;
+    gap: 6px; /* Fixed gap between tiles */
+    width: 85%;
+    max-width: 400px;
+    max-height: 400px;
+    aspect-ratio: 1 / 1;    
+}
+
+.tile {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    font-size: 1.2vw;
+    min-width: 24px;
+    min-height: 24px;
+    max-width: 60px;
+    max-height: 60px;
+    box-sizing: border-box;
+    background: #222;
+    border-radius: 6px;
+    border: 1px solid #444;
+    cursor: pointer;
+    font-size: 1.5rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+    color: inherit;
+}
+.tile.revealed, .revealed {
+    background: #4caf50;
+    color: #fff;
+}
+.tile.bomb, .bomb {
+    background: #e53935;
+    color: #fff;
+}
+
+#message {
+    margin-top: 12px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #ffd600;
+    text-align: center;
+    min-height: 24px;
+}
+
+#mine-section {
+    text-align: center;
+    color: #ffffff;
+    background-color: #1e293b;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    margin: 20px auto;
+    max-width: 1000px;
+}
+
+.mine-controls div {
+    flex: 1;
+}
+
+.mine-controls button {
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #ffffff;
+    background-color: #10b981;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.mine-controls button:hover {
+    background-color: #38bdf8;
+    transform: scale(1.05);
+}
+
+.mine-controls input {
+    width: 100px;
+    padding: 5px;
+    font-size: 14px;
+    border: 2px solid #10b981;
+    border-radius: 5px;
+    background-color: #0f172a;
+    color: #ffffff;
+    text-align: center;
+}
+
+.tile.disabled-tile {
+    background: #eee;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+/* Responsive controls and text */
+.game-controls-row,
+.game-details {
+    font-size: 1.1vw;
+}
+
+.bet-controls input[type="number"] {
+    width: 60px;
+    font-size: 1em;
+}
+
+.show-bomb {
+    border: 2px solid red !important;
+    box-shadow: 0 0 8px red;
+}
+
+@media (max-width: 700px) {
+    .game-box {
+        max-width: 98vw;
+        padding: 6px;
+    }
+    .game-controls-row,
+    .game-details {
+        font-size: 2.5vw;
+    }
+    #game {
+        gap: 6px;
+    }
+    .tile, .tile.disabled-tile {
+        font-size: 3vw;
+        min-width: 18px;
+        min-height: 18px;
+        max-width: 32px;
+        max-height: 32px;
+    }
+    .bet-controls input[type="number"] {
+        width: 40px;
+    }
+    button {
+        font-size: 0.9em;
+        padding: 0.3em 0.7em;
+    }
+}
+
+@media (max-width: 450px) {
+    .game-box {
+        padding: 2px;
+    }
+    #game {
+        gap: 4px;
+    }
+    .tile, .tile.disabled-tile {
+        font-size: 4vw;
+        min-width: 12px;
+        min-height: 12px;
+        max-width: 20px;
+        max-height: 20px;
+    }
+    .game-controls-row,
+    .game-details {
+        font-size: 3.5vw;
+    }
+}

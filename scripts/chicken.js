@@ -1,5 +1,4 @@
 const road = document.getElementById("road");
-const line = document.getElementById("line");
 const betInput = document.getElementById("bet-input");
 const playButton = document.getElementById("play-button");
 const cashoutButton = document.getElementById("cashout-button");
@@ -9,45 +8,36 @@ const message = document.getElementById("message");
 
 let chicken = document.createElement("div");
 chicken.classList.add("chicken");
-chicken.innerHTML = `
-  <div class="head">
+chicken.innerHTML = `<div class="head">
     <div class="comb">
       <div class="comb-lobe l1"></div>
       <div class="comb-lobe l2"></div>
       <div class="comb-lobe l3"></div>
     </div>
   </div>
-
   <div class="tail">
     <div class="feather feather1"></div>
     <div class="feather feather2"></div>
     <div class="feather feather3"></div>
   </div>
-
   <div class="body">
     <div class="belly"></div>
   </div>
-
   <div class="wing"></div>
-
   <div class="eye">
     <div class="pupil"></div>
     <div class="shine"></div>
   </div>
-
   <div class="beak-top"></div>
   <div class="beak-bottom"></div>
-
   <div class="comb comb1"></div>
   <div class="comb comb2"></div>
-
   <div class="leg leg-left">
     <div class="foot"></div>
   </div>
   <div class="leg leg-right">
     <div class="foot"></div>
-  </div>
-`;
+  </div>`;
 road.appendChild(chicken);
 
 let stepIndex = -1;
@@ -70,30 +60,36 @@ const crashDistributions = {
     hardcore: 0.60
 };
 
+const carPassChances = {
+    easy: 0.05,
+    medium: 0.08,
+    hard: 0.13,
+    hardcore: 0.2
+};
+
 let multipliers = [];
-
-document.getElementById('min-bet-button').addEventListener('click', () => {
-    document.getElementById('bet-input').value = 0.01;
-    bet = 0.01;
-    updatePotentials();
-});
-
-document.getElementById('max-bet-button').addEventListener('click', () => {
-    const credits = parseFloat(document.getElementById('credits').textContent) || 0;
-    document.getElementById('bet-input').value = credits.toFixed(2);
-    bet = credits;
-    updatePotentials();
-});
 
 function precalculateCrashStep(stepsCount = 10) {
     const surviveChance = crashDistributions[difficulty];
-    crashStep = stepsCount; // Default: survives all steps
+    crashStep = stepsCount;
     for (let i = 0; i < stepsCount; i++) {
         if (Math.random() > surviveChance) {
             crashStep = i;
             break;
         }
     }
+}
+
+function createCarHTML() {
+    return `
+       <div class="window"></div>
+  <div class="wheel wheel-front-left"></div>
+  <div class="wheel wheel-front-right"></div>
+  <div class="wheel wheel-back-left"></div>
+  <div class="wheel wheel-back-right"></div>
+  <div class="light left-light"></div>
+  <div class="light right-light"></div>
+    `;
 }
 
 function generateSteps(count = 10) {
@@ -107,18 +103,24 @@ function generateSteps(count = 10) {
         const step = document.createElement("div");
         step.classList.add("step");
 
+        // Create barrier for this step, hidden initially
+        const barrier = document.createElement("div");
+        barrier.classList.add("barrier");
+        barrier.style.display = "none"; // hidden initially
+        step.appendChild(barrier);
+
         let multi = (baseMultiplier * Math.pow(1 + growthFactor, i + 1)).toFixed(2);
         multipliers.push(parseFloat(multi));
 
-        step.innerHTML = `
+        step.innerHTML += `
             <div class="multiplier">${multi}x</div>
             <div class="potential">$0.00</div>
         `;
         road.appendChild(step);
 
-        const line = document.createElement("div");
-        line.classList.add("line");
-        road.appendChild(line);
+        const roadLine = document.createElement("div");
+        roadLine.classList.add("line");
+        road.appendChild(roadLine);
     }
 
     road.appendChild(chicken);
@@ -129,7 +131,7 @@ function updateChickenPosition() {
     const roadWidth = road.offsetWidth;
     const windowWidth = window.innerWidth;
 
-    chicken.style.top = '120px';
+    chicken.style.top = '160px';
 
     if (stepIndex === -1) {
         chicken.style.left = `${Math.min(-80, -roadWidth / 10)}px`;
@@ -145,8 +147,6 @@ function updateChickenPosition() {
     }
 }
 
-
-
 function updatePotentials() {
     const steps = document.querySelectorAll(".step");
     steps.forEach((step, i) => {
@@ -160,10 +160,10 @@ function setDefaultChickenPosition() {
     const roadHeight = road.offsetHeight;
     const chickenHeight = chicken.offsetHeight;
     chicken.style.left = "-150px"; 
-    chicken.style.bottom = `${(roadHeight - chickenHeight) / 2 + 30}px`;
+    chicken.style.bottom = `${(roadHeight - chickenHeight) / 2 + 20}px`;
 }
 
-function resetCHickenPosition() {
+function resetChickenPosition() {
     setDefaultChickenPosition();
 }
 
@@ -185,10 +185,10 @@ function startGame() {
     }
 
     updateCredits(-bet);
+    betInput.setAttribute("disabled", "true");
 
     document.querySelectorAll(".difficulty").forEach(btn => btn.classList.remove("selected"));
     document.querySelector(`.difficulty[data-diff="${difficulty}"]`).classList.add("selected");
-
     document.querySelectorAll(".difficulty").forEach(btn => btn.setAttribute("disabled", "true"));
 
     playButton.style.display = "none";
@@ -200,18 +200,45 @@ function startGame() {
     message.innerText = "";
 
     setDefaultChickenPosition(); 
-
     precalculateCrashStep(multipliers.length);
 
-    // Remove previous would-have-died markers
     document.querySelectorAll(".would-have-died").forEach(step => {
         step.classList.remove("would-have-died");
         const marker = step.querySelector(".would-have-died-marker");
         if (marker) marker.remove();
     });
-    if (window.raccoon === true) {
+
+    if (_raccoonState === true) {
         showWouldHaveDiedStep();
     }
+}
+
+function triggerCrash() {
+    playing = false;
+
+    const car = document.createElement("div");
+    car.innerHTML = createCarHTML();
+    car.classList.add("car");
+    road.appendChild(car);
+    car.style.left = chicken.style.left;
+    car.style.left = `${parseFloat(car.style.left) + 10}px`;
+
+    setTimeout(() => {
+        car.style.top = "30px";
+    }, 50);
+
+    setTimeout(() => {
+        message.innerText = `💥 You lost $${bet.toFixed(2)}. The chicken got hit!`;
+        inGameButtons.style.display = "none";
+        playButton.style.display = "inline-block";
+
+        document.querySelectorAll(".difficulty").forEach(btn => btn.removeAttribute("disabled"));
+
+        stepIndex = -1;
+        resetChickenPosition();
+        betInput.removeAttribute("disabled");
+        car.remove();
+    }, 1000);
 }
 
 function stepForward() {
@@ -234,70 +261,22 @@ function stepForward() {
         return;
     }
 
-    // Precalculated crash
     if (stepIndex === crashStep) {
+        updateChickenPosition();
         triggerCrash();
         return;
     }
 
-    if (stepIndex >= 0 && stepIndex < multipliers.length) {
-        const barrier = document.createElement("div");
-        barrier.classList.add("barrier");
-        document.querySelectorAll(".step")[stepIndex].appendChild(barrier);
-    }
-
     updateChickenPosition();
-}
 
-function triggerCrash() {
-    if (stepIndex >= 0 && stepIndex < multipliers.length) {
-        const step = document.querySelectorAll(".step")[stepIndex];
-        let offsetLeft = step.offsetLeft + step.offsetWidth / 2 - chicken.offsetWidth / 2;
-
-        // Apply same -40 offset as in updateChickenPosition
-        offsetLeft -= 40;
-
-        chicken.style.left = `${offsetLeft}px`;
-        chicken.style.bottom = "20px"; 
+    // Activate barrier on the current step so cars can't pass here anymore
+    const steps = document.querySelectorAll(".step");
+    if (stepIndex >= 0 && stepIndex < steps.length) {
+        const barrier = steps[stepIndex].querySelector(".barrier");
+        if (barrier) {
+            barrier.style.display = "block"; // show barrier
+        }
     }
-
-    playing = false;
-
-    const car = document.createElement("div");
-    car.innerHTML = `
-        <div class="window"></div>
-
-        <!-- Roues -->
-        <div class="wheel wheel-front-left"></div>
-        <div class="wheel wheel-front-right"></div>
-        <div class="wheel wheel-back-left"></div>
-        <div class="wheel wheel-back-right"></div>
-
-        <!-- Feux arrière -->
-        <div class="light left-light"></div>
-        <div class="light right-light"></div>
-    `;
-    car.classList.add("car");
-    road.appendChild(car);
-    car.style.left = chicken.style.left;
-    car.style.left = `${parseFloat(car.style.left) + 10}px`; // Start car slightly off-screen
-
-    setTimeout(() => {
-        car.style.top = "30px";
-    }, 50);
-
-    setTimeout(() => {
-        message.innerText = `💥 You lost $${bet.toFixed(2)}. The chicken got hit!`;
-        inGameButtons.style.display = "none";
-        playButton.style.display = "inline-block";
-
-        document.querySelectorAll(".difficulty").forEach(btn => btn.removeAttribute("disabled"));
-
-        stepIndex = -1;
-        resetCHickenPosition();
-        
-        car.remove();
-    }, 1000);
 }
 
 function cashOut() {
@@ -323,18 +302,55 @@ function cashOut() {
 
     inGameButtons.style.display = "none";
     playButton.style.display = "inline-block";
+    betInput.removeAttribute("disabled");
     playing = false;
 
     showWouldHaveDiedStep();
 
     stepIndex = -1;
-    resetCHickenPosition();
+    resetChickenPosition();
 }
+
+function spawnRandomCar() {
+
+    const steps = document.querySelectorAll(".step");
+    if (steps.length === 0) return;
+
+    const chance = carPassChances[difficulty];
+    steps.forEach((step, i) => {
+        // Don't spawn car if barrier is active on this step
+        const barrier = step.querySelector(".barrier");
+        const barrierActive = barrier && barrier.style.display === "block";
+        if (!barrierActive && Math.random() < chance) {
+            const car = document.createElement("div");
+            car.classList.add("car");
+            car.innerHTML = createCarHTML();
+            road.appendChild(car);
+            const stepRect = step.getBoundingClientRect();
+            const roadRect = road.getBoundingClientRect();
+            const leftPos = stepRect.left - roadRect.left + (step.offsetWidth - car.offsetWidth) / 2;
+            car.style.left = `${leftPos}px`;
+            car.style.top = "-80px";
+            setTimeout(() => {
+                car.style.transition = "top 1s linear";
+                car.style.top = `${road.offsetHeight + 100}px`;
+            }, 50);
+            setTimeout(() => {
+                if (road.contains(car)) {
+                    road.removeChild(car);
+                }
+            }, 2050);
+        }
+    });
+}
+
+setInterval(spawnRandomCar, 800);
 
 betInput.addEventListener("input", () => {
     bet = parseFloat(betInput.value);
     updatePotentials();
 });
+
 betInput.addEventListener("keypress", (e) => {
     if (e.key === "Enter") {
         bet = parseFloat(betInput.value);

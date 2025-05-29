@@ -6,7 +6,6 @@
   <title>Crazy Casino</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles/styles.css" />
-  <link rel="stylesheet" href="styles/slot.css" />
 </head>
 <body>
   <div class="app">
@@ -31,31 +30,36 @@
     </header>
 
     <main class="main-content"> 
-      <section id="slot-section" class="slot-game">
-        <h2>Slot Machine</h2>
-        <div class="slot-reels">
-          <div class="reel" id="reel1"><div class="symbols">🍇🍒🍇7️⃣🔔🍉🍇</div></div>
-          <div class="reel" id="reel2"><div class="symbols">🍇🍒🍇7️⃣🔔🍉🍇</div></div>
-          <div class="reel" id="reel3"><div class="symbols">🍇🍒🍇7️⃣🔔🍉🍇</div></div>
+
+      <section id="crash-section" class="crash-section">
+        <div id="gameContainer">
+        <canvas id="game" width="400" height="350"></canvas>
+        <p id="currentMultiplier">0.0x</p>
+    </div>
+
+    <div id="infoContainer">
+        <div style="display: flex;">
+            <p id="balance">?</p>
+            <p id="crashedAt">Multiplier at crash:</p>
         </div>
-        <div id="win"></div>
-        <input type="number" id="bet" value="1" min="0.01" class="bet-amount" />
-        <button id="slot-button" onclick="startSpin()">Spin</button>
-        <button id="slot-button" onclick="document.getElementById('bet').value = credits;">All in</button>
-        <div style="margin-top: 20px; text-align: left; max-width: 400px; margin-left: auto; margin-right: auto;">
-          <h4>How to Play:</h4>
-          <p>Press the "Spin" button to spin the reels. Each spin costs the amount you bet.</p>
-          <h4>How to Win:</h4>
-          <ul>
-            <li>Three fruits = 1.5x your bet</li>
-            <li>Three "🍒" = 10x your bet</li>
-            <li>Three "🍇" = 10x your bet</li>
-            <li>Three "🍉" = 10x your bet</li>
-            <li>Three "🔔" = 25x your bet</li>
-            <li>Three "7️⃣" = 100x your bet</li>
-          </ul>
+
+        <div id="betContainer">
         </div>
-      </section >
+    </div>
+
+    <div id="buttonContainer">
+        <button id="submitBet">Start Game</button>
+        <button id="takeProfits">Take Profits</button>
+        <label for="betAmount">Bet Amount:</label>
+        <input type="number" id="betAmount" value="1">
+    </div>
+
+    <div id="lastCrashesContainer">
+        <p>Last Crashes:</p>
+        <div id="lastCrashes"></div>
+    </div>
+      </section>
+
     </main>
   </div>
 
@@ -64,6 +68,6 @@
   </footer>
 
   <script src="scripts/main.js"></script>
-  <script src="scripts/slot.js"></script>
+  <script src="scripts/crash.js"></script>
 </body>
 </html>

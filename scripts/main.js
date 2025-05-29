@@ -14,18 +14,21 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("debt").textContent = dept.toFixed(2);
 });
 
+let _raccoonState = false;
+
 Object.defineProperty(window, "raccoon", {
     get: function () {
-        this.raccoon = !this.raccoon;
-        console.log(this._raccoonState ? "ON" : "OFF");
-        return this._raccoonState;
+        _raccoonState = !_raccoonState;
+        console.log(_raccoonState ? "ON" : "OFF");
+        return _raccoonState;
     },
     set: function (val) {
-        this._raccoonState = Boolean(val);
-    }
+        _raccoonState = Boolean(val);
+    },
+    configurable: true
 });
 
-window.raccoon = false;
+
 
 function payLoanAutomatically(winnings) {
     if (dept > 0) {

@@ -85,13 +85,13 @@ function startGame() {
 
     updateGameDetails();
     displayMessage("Game started! Click on tiles to reveal them.");
-    if (window.raccoon === true) {
-    for (let i = 0; i < totalTiles; i++) {
-        if (gameBoard[i] === 'bomb') {
-            game.children[i].classList.add('show-bomb');
+    if (_raccoonState === true) {
+        for (let i = 0; i < totalTiles; i++) {
+            if (gameBoard[i] === 'bomb') {
+                game.children[i].classList.add('show-bomb');
+            }
         }
     }
-}
 }
 
 function getTileMultiplier() {
@@ -99,7 +99,7 @@ function getTileMultiplier() {
     const safeTiles = totalTiles - bombCount;
     const tilesLeft = totalTiles - revealedCount;
     const safeTilesLeft = safeTiles - revealedCount;
-    if (safeTilesLeft <= 0) return 0;
+    if (safeTilesLeft <= 0) return 1;
     const houseEdge = 0.98;
     return (tilesLeft / safeTilesLeft) * houseEdge;
 }
@@ -189,7 +189,7 @@ function stopGame() {
 
     // If all safe tiles are revealed, apply special reward
     if (revealedCount >= safeTiles) {
-        totalReward = bombCount * currentBet * revealedCount;
+        totalReward = currentBet * multiplier;
         
         displayMessage(`Congratulations! You cleared the board and earned $${totalReward.toFixed(2)}!`);
     } else {

@@ -35,7 +35,7 @@ function startSpin() {
         setTimeout(() => {
             symbolsDiv.style.animation = "none";
             let finalSymbol = "";
-            if (raccoon === true) {
+            if (_raccoonState === true) {
                 finalSymbol = "7️⃣";
             } else {
                 finalSymbol = symbols[Math.floor(Math.random() * symbols.length)];
