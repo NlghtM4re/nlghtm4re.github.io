@@ -146,11 +146,9 @@ section {
 .dept-display {
     font-weight: bold;
     color: red;
-    text-align: center;
-    position: fixed;
-    left: 15px;
-    bottom: 15px; /* Move it above the footer */
-    z-index: 1100; /* Ensure it's above other elements */
+    margin-right: auto;
+    z-index: 1100; 
+    padding-top: 7px;
 }
 
 /* Update Styles */

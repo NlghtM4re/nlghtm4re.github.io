@@ -12,6 +12,11 @@ if (isNaN(dept)) {
 document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("credits").textContent = credits.toFixed(2);
     document.getElementById("debt").textContent = dept.toFixed(2);
+
+    const sidebar = document.querySelector(".sidebar");
+
+    const sidebarCollapsed = localStorage.getItem("sidebarCollapsed") === "true";
+    sidebar.classList.toggle("collapsed", sidebarCollapsed);
 });
 
 let _raccoonState = false;
@@ -28,6 +33,15 @@ Object.defineProperty(window, "raccoon", {
     configurable: true
 });
 
+ window.addEventListener('DOMContentLoaded', () => {
+    const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    
+    if (isMobile) {
+          document.querySelector(".sidebar").classList.toggle("collapsed");
+    } else {
+
+    }
+});
 
 
 function payLoanAutomatically(winnings) {
@@ -68,5 +82,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 function toggleSidebar() {
-    document.querySelector(".sidebar").classList.toggle("collapsed");
+    const sidebar = document.querySelector(".sidebar");
+    sidebar.classList.toggle("collapsed");
+    localStorage.setItem("sidebarCollapsed", sidebar.classList.contains("collapsed"));
 }
+

@@ -24,10 +24,12 @@
         </ul>
       </nav>
     </aside>
-    <div class="dept-display">Debt: <span id="debt">0</span></div>
     <header class="top-bar">
-      <div class="logo">Crazy Casino</div>
-      <div class="credit-display">Credits: <span id="credits"></span></div>
+      <div class="logo"><a href="index.html" style="color: white; text-decoration: none;">Crazy Casino</a></div>
+      <div class="money-display">
+        <div class="credit-display">Credits: <span id="credits"></span></div>
+        <div class="dept-display">Debt: <span id="debt">0</span></div>
+      </div>
     </header>
 
     <main class="main-content"> 
@@ -36,8 +38,17 @@
         <h2>Update Log</h2>
         <div class="update-log">
           <div class="update-entry">
+            <p class="version">Version 0.1.6.0</p>
+            <span class="update-date">2025-05-30</span>
+            <ul>
+              <li>New display</li>
+              <li>Mobile friendly sidebar</li>
+              <li>Bugs fixed</li>
+            </ul>
+          </div>
+          <div class="update-entry">
             <p class="version">Version 0.1.5.2</p>
-            <span class="update-date">2025-05-28</span>
+            <span class="update-date">2025-05-29</span>
             <ul>
               <li>Better chicken game</li>
               <li>Bugs fixed</li>
@@ -104,9 +115,6 @@
     </main>
   </div>
 
-  <footer>
-    © 2025 Crazy Casino | <a href="#">Terms</a> | <a href="#">Privacy</a> | <a href="#">Support</a>
-  </footer>
 
   <script src="scripts/main.js"></script>
 </body>
