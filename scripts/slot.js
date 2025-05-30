@@ -31,7 +31,7 @@ function startSpin() {
         const symbolsDiv = reel.querySelector(".symbols");
         symbolsDiv.style.animation = "spin 0.3s linear infinite";
         fillSymbols(reel);
-
+        
         setTimeout(() => {
             symbolsDiv.style.animation = "none";
             let finalSymbol = "";

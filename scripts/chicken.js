@@ -330,7 +330,7 @@ function spawnRandomCar() {
             const roadRect = road.getBoundingClientRect();
             const leftPos = stepRect.left - roadRect.left + (step.offsetWidth - car.offsetWidth) / 2;
             car.style.left = `${leftPos}px`;
-            car.style.top = "-120px";
+            car.style.top = "-80px";
             car.offsetHeight;
 
             setTimeout(() => {

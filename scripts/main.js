@@ -10,6 +10,22 @@ if (isNaN(dept)) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+   const usernameInput = document.getElementById("username");
+  const savedUsername = localStorage.getItem("username");
+
+  if (savedUsername) {
+    usernameInput.value = savedUsername;
+  }
+  if (savedUsername === "raccoon"){
+    _raccoonState = true;
+  }
+  
+
+  usernameInput.addEventListener("input", () => {
+    localStorage.setItem("username", usernameInput.value);
+  });
+
+
     document.getElementById("credits").textContent = credits.toFixed(2);
     document.getElementById("debt").textContent = dept.toFixed(2);
 
