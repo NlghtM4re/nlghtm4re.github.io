@@ -330,10 +330,12 @@ function spawnRandomCar() {
             const roadRect = road.getBoundingClientRect();
             const leftPos = stepRect.left - roadRect.left + (step.offsetWidth - car.offsetWidth) / 2;
             car.style.left = `${leftPos}px`;
-            car.style.top = "-80px";
+            car.style.top = "-120px";
+            car.offsetHeight;
+
             setTimeout(() => {
                 car.style.transition = "top 0.6s linear";
-                car.style.top = `${road.offsetHeight}px`;
+                car.style.top = `${road.offsetHeight - 20}px`;
             }, 50);
             setTimeout(() => {
                 if (road.contains(car)) {
