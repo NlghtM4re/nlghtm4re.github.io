@@ -47,17 +47,17 @@ let difficulty = "easy";
 let crashStep = null;
 
 const multipliersByDiff = {
-    easy: 0.06,
-    medium: 0.2,
-    hard: 0.5,
-    hardcore: 1
+    easy: Math.pow(1.79, 1 / 10) - 1,       // ≈ 0.06
+    medium: Math.pow(2.69, 1 / 10) - 1,     // ≈ 0.10
+    hard: Math.pow(5.11, 1 / 10) - 1,       // ≈ 0.17
+    hardcore: Math.pow(1024, 1 / 10) - 1    // = 1
 };
 
 const crashDistributions = {
-    easy: 0.93,
-    medium: 0.85,
-    hard: 0.75,
-    hardcore: 0.60
+    easy: Math.pow(1 / 1.79, 1 / 10),       // ≈ 0.93
+    medium: Math.pow(1 / 2.69, 1 / 10),     // ≈ 0.86
+    hard: Math.pow(1 / 5.11, 1 / 10),       // ≈ 0.79
+    hardcore: Math.pow(1 / 1024, 1 / 10)    // = 0.60
 };
 
 const carPassChances = {
@@ -346,7 +346,7 @@ function spawnRandomCar() {
     });
 }
 
-setInterval(spawnRandomCar, 800);
+setInterval(spawnRandomCar, 800);   
 
 betInput.addEventListener("input", () => {
     bet = parseFloat(betInput.value);
