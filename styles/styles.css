@@ -41,6 +41,8 @@ body {
     white-space: nowrap;
     transition: opacity 0.3s ease;
     padding-left: 0;
+    cursor: pointer;
+    text-decoration: none;
 }
 
 section {

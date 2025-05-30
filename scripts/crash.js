@@ -78,17 +78,32 @@ function crashCurve() {
     clearInterval(gameLoop);
     crashed = true;
 
-    const crashValue = curvePoints.length / 100;
-    document.getElementById('crashedAt').innerText = `Multiplier at crash: ${crashValue.toFixed(2)}`;
+    const multiplier = curvePoints.length / 100;
+    let profit = 0;
+    let status = "Lost";
 
-    const crash = document.createElement('p');
-    crash.innerText = crashValue.toFixed(2);
-    crash.style = 'padding: 0; margin: 0;';
-    crash.style.color = profitsTaken ? 'lime' : 'red';
-    document.getElementById('lastCrashes').appendChild(crash);
+    if (profitsTaken) {
+        profit = betAmount * multiplier;
+        profit = payLoanAutomatically(profit);
+        updateCredits(profit);
+        status = "Won";
+    }
+
+    const crashLog = document.createElement("div");
+    crashLog.classList.add("crash-entry");
+    crashLog.innerHTML = `
+        <span>💥 ${multiplier.toFixed(2)}x</span>
+        <span>🎲 Bet: ${betAmount}</span>
+        <span>${status === "Won" ? "✅" : "❌"} ${status}</span>
+        <span>${status === "Won" ? `+${profit.toFixed(2)}` : "-"} </span>
+    `;
+    crashLog.style.color = status === "Won" ? "lime" : "red";
+
+    document.getElementById("lastCrashes").prepend(crashLog);
 
     updateCurve();
 }
+
 
 // Event: Place bet
 document.getElementById('submitBet').addEventListener('click', function () {
@@ -111,21 +126,24 @@ document.getElementById('submitBet').addEventListener('click', function () {
     }
 });
 
-// Event: Take profits
-document.getElementById('takeProfits').addEventListener('click', function () {
+function setMinBet() {
+    document.getElementById('betAmount').value = 1;
+}
+
+function setMaxBet() {
+    document.getElementById('betAmount').value = Math.floor(credits);
+}
+
+document.getElementById("takeProfits").addEventListener("click", function () {
     if (!crashed && !profitsTaken) {
         profitsTaken = true;
         const multiplier = curvePoints.length / 100;
         let profit = betAmount * multiplier;
-
-        console.log(`Took profits. Multiplier: ${multiplier.toFixed(2)}, profit: ${(profit - betAmount).toFixed(2)}`);
-
         profit = payLoanAutomatically(profit);
         updateCredits(profit);
-    } else if (profitsTaken) {
-        console.log('Profits already taken');
     }
 });
+
 
 // On load
 document.addEventListener("DOMContentLoaded", () => {
