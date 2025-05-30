@@ -332,14 +332,14 @@ function spawnRandomCar() {
             car.style.left = `${leftPos}px`;
             car.style.top = "-80px";
             setTimeout(() => {
-                car.style.transition = "top 1s linear";
-                car.style.top = `${road.offsetHeight + 100}px`;
+                car.style.transition = "top 0.6s linear";
+                car.style.top = `${road.offsetHeight}px`;
             }, 50);
             setTimeout(() => {
                 if (road.contains(car)) {
                     road.removeChild(car);
                 }
-            }, 2050);
+            }, 600);
         }
     });
 }

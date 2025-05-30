@@ -89,6 +89,8 @@
     align-items: center;
     justify-content: space-between; /* Ensure sidewalks stay on both sides */
     height: 250px;  
+    height: 100%;
+    overflow: hidden;
 }
 
 .sidewalk {
@@ -109,6 +111,8 @@
     overflow-x: hidden; /* Hide the overflowing part */
     box-sizing: border-box;
     background-color: #333; /* Add a road-like color */
+    height: 100%;
+    overflow: hidden;
 }
 
 .line {
