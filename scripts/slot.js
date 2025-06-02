@@ -53,28 +53,21 @@ function startSpin() {
 
 function calculateWinnings(results, betAmount) {
     const [r1, r2, r3] = results;
-    let multiplier = 0;
 
+    let multiplier = 0;
     if (r1 === r2 && r2 === r3) {
-        if (r1 === "🍒") multiplier = 10;
-        else if (r1 === "🍇") multiplier = 10;
-        else if (r1 === "🍉") multiplier = 10;
-        else if (r1 === "🔔") multiplier = 25;
-        else if (r1 === "7️⃣") multiplier = 100;
-    }else {
-      if  (["🍒", "🍇", "🍉"].includes(r1)) {
-            if  (["🍒", "🍇", "🍉"].includes(r2)) {
-                if  (["🍒", "🍇", "🍉"].includes(r3)) {
-                    multiplier = 1.5;
-                }
-            }
-        }
+        multiplier = (r1 === "🔔") ? 25 :
+                     (r1 === "7️⃣") ? 100 : 10;      // 🍒, 🍇, 🍉 => 10
+    } else if (["🍒","🍇","🍉"].includes(r1) &&
+               ["🍒","🍇","🍉"].includes(r2) &&
+               ["🍒","🍇","🍉"].includes(r3)) {
+        multiplier = 1.5;
     }
 
-    let winnings = betAmount * multiplier;
-
-    winnings = payLoanAutomatically(winnings);
-
-    updateCredits(winnings);
+    const winnings = betAmount * multiplier;
     document.getElementById("win").textContent = "x" + multiplier;
+
+
+        updateCredits(winnings);
+    
 }

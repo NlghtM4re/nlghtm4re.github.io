@@ -187,7 +187,6 @@ function stopGame() {
     const safeTiles = totalTiles - bombCount;
     let totalReward;
 
-    // If all safe tiles are revealed, apply special reward
     if (revealedCount >= safeTiles) {
         totalReward = currentBet * multiplier;
         
@@ -197,7 +196,7 @@ function stopGame() {
         displayMessage(`Game stopped. You earned $${totalReward.toFixed(2)}!`);
     }
 
-    updateCredits(payLoanAutomatically(parseFloat(totalReward) || 0));
+    payLoanAutomatically(totalReward);
 
     // Toggle buttons back and re-enable controls
     document.getElementById('start-game-btn').style.display = '';

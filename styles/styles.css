@@ -119,6 +119,28 @@ section {
     width: calc(100% - 45px);
 }
 
+html.sidebar-collapsed .sidebar {
+    width: 45px;
+}
+
+html.sidebar-collapsed .sidebar .logo {
+    opacity: 0;
+}
+
+html.sidebar-collapsed .sidebar nav ul li a span {
+    display: none;
+}
+
+html.sidebar-collapsed .main-content {
+    margin-left: 45px;
+}
+
+html.sidebar-collapsed .top-bar {
+    left: 45px;
+    width: calc(100% - 45px);
+}
+
+
 /* Top Bar Styles */
 .top-bar {
     position: fixed;

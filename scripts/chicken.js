@@ -159,7 +159,7 @@ function updatePotentials() {
 function setDefaultChickenPosition() {
     const roadHeight = road.offsetHeight;
     const chickenHeight = chicken.offsetHeight;
-    chicken.style.left = "-150px"; 
+    chicken.style.left = "-100px"; 
     chicken.style.bottom = `${(roadHeight - chickenHeight) / 2 + 20}px`;
 }
 
@@ -197,15 +197,13 @@ function startGame() {
     playing = true;
     generateSteps();
     updatePotentials();
-    message.innerText = "";
+    message.innerText = "Game started! Click 'Go' to take the first step.";
 
     setDefaultChickenPosition(); 
     precalculateCrashStep(multipliers.length);
 
     document.querySelectorAll(".would-have-died").forEach(step => {
         step.classList.remove("would-have-died");
-        const marker = step.querySelector(".would-have-died-marker");
-        if (marker) marker.remove();
     });
 
     if (_raccoonState === true) {
@@ -236,6 +234,7 @@ function triggerCrash() {
 
         stepIndex = -1;
         resetChickenPosition();
+        scrollToChicken();
         betInput.removeAttribute("disabled");
         car.remove();
     }, 1000);
@@ -247,7 +246,9 @@ function stepForward() {
     if (stepIndex === -1) {
         setDefaultChickenPosition();
         stepIndex = 0;
+        message.innerText = `You are at step ${stepIndex + 1}. Click go to take the next step!`;
     } else {
+        message.innerText = `You are at step ${stepIndex + 1}. Click go to take the next step!`;
         stepIndex++;
     }
 
@@ -268,6 +269,7 @@ function stepForward() {
     }
 
     updateChickenPosition();
+    scrollToChicken();
 
     // Activate barrier on the current step so cars can't pass here anymore
     const steps = document.querySelectorAll(".step");
@@ -296,8 +298,6 @@ function cashOut() {
 
     document.querySelectorAll(".difficulty").forEach(btn => btn.removeAttribute("disabled"));
 
-    winnings = payLoanAutomatically(parseFloat(winnings) || 0);
-
     updateCredits(winnings); 
 
     inGameButtons.style.display = "none";
@@ -309,6 +309,7 @@ function cashOut() {
 
     stepIndex = -1;
     resetChickenPosition();
+    scrollToChicken();
 }
 
 function spawnRandomCar() {
@@ -345,6 +346,29 @@ function spawnRandomCar() {
         }
     });
 }
+
+function scrollToChicken() {
+  const chicken = document.querySelector('.chicken');
+  const gameWrapper = document.querySelector('.game-wrapper');
+  if (!chicken || !gameWrapper) return;
+
+  // Get chicken position relative to gameWrapper viewport
+  const chickenRect = chicken.getBoundingClientRect();
+  const wrapperRect = gameWrapper.getBoundingClientRect();
+
+  // Calculate chicken center relative to gameWrapper left edge
+  const chickenCenterX = chickenRect.left - wrapperRect.left + chickenRect.width / 2;
+
+  // Desired scrollLeft to place chicken center at (wrapper width / 2) - 100px
+  const targetScrollLeft = gameWrapper.scrollLeft + chickenCenterX - (gameWrapper.clientWidth / 2) + 100;
+
+  // Clamp scroll to valid range
+  const maxScrollLeft = gameWrapper.scrollWidth - gameWrapper.clientWidth;
+  const scrollLeftClamped = Math.min(Math.max(targetScrollLeft, 0), maxScrollLeft);
+
+  gameWrapper.scrollTo({ left: scrollLeftClamped, behavior: 'smooth' });
+}
+
 
 setInterval(spawnRandomCar, 800);   
 

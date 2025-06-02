@@ -3,30 +3,55 @@ const ctx = canvas.getContext('2d');
 ctx.strokeStyle = 'blue';
 ctx.lineWidth = 2;
 
-let speed = 0.01;
+let speed = 0.1;
+let elapsedTime = 0;
 let curvePoints = [];
 let gameLoop;
-let success;
 let crashed = false;
 let betAmount = 0;
 let profitsTaken = false;
+let profitMultiplier = 0;
+let gameInProgress = false;
 let rocketPosition = { x: 0, y: 0 };
 
 const betAmountInput = document.getElementById('betAmount');
-
-// Game functions
-function startGame() {
-    curvePoints = [{ x: 0, y: canvas.height }];
-    updateCurve();
-}
+const submitBetBtn = document.getElementById('submitBet');
+const takeProfitsBtn = document.getElementById('takeProfits');
+const messageBox = document.getElementById('messageBox'); 
 
 function updateCurvePoints() {
+    elapsedTime += 16;
+
+    const maxSpeed = 1.2;    
+    const growthRate = 0.001;  
+    const midpoint = 4000;     
+
+    const currentSpeed = maxSpeed / (1 + Math.exp(-growthRate * (elapsedTime - midpoint)));
+
     const lastPoint = curvePoints[curvePoints.length - 1];
-    const newX = lastPoint.x + 1;
+    const newX = lastPoint.x + currentSpeed;
     const newY = canvas.height - (Math.pow(newX, 1.75) / 100);
     curvePoints.push({ x: newX, y: newY });
-    document.getElementById('currentMultiplier').innerText = (curvePoints.length / 100).toFixed(2) + 'x';
+
+    const multiplier = newX / 100;
+    document.getElementById('currentMultiplier').innerText = multiplier.toFixed(2) + 'x';
+
+    // Adjust crash chance if profit is taken to make crash less likely
+    let baseChance = 0.0003;
+    let chanceIncreaseFactor = 0.002;
+
+    if (profitsTaken) {
+        baseChance = 0.00005;  // much lower base chance after taking profits
+        chanceIncreaseFactor = 0.0003; // much smaller increase factor
+    }
+
+    const crashProbability = Math.min(0.8, baseChance + chanceIncreaseFactor * Math.pow(multiplier, 1.4));
+
+    if (Math.random() < crashProbability) {
+        crashCurve();
+    }
 }
+
 
 function updateCurve() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -41,7 +66,6 @@ function updateCurve() {
 
     if (!crashed) {
         const lastPoint = curvePoints[curvePoints.length - 1];
-
         if (curvePoints.length >= 2) {
             const secondLastPoint = curvePoints[curvePoints.length - 2];
             const deltaX = lastPoint.x - secondLastPoint.x;
@@ -70,86 +94,90 @@ function updateCurve() {
     }
 }
 
-function getRandomCrashTime(min, max) {
-    return (Math.random() * (max - min) + min) * 1000;
-}
-
 function crashCurve() {
     clearInterval(gameLoop);
     crashed = true;
+    gameInProgress = false;
+    submitBetBtn.disabled = false;
+    takeProfitsBtn.disabled = true;
 
-    const multiplier = curvePoints.length / 100;
+    const finalMultiplier = curvePoints[curvePoints.length - 1].x / 100;
+    const usedMultiplier = profitsTaken ? profitMultiplier : 0;
     let profit = 0;
-    let status = "Lost";
+    const win = profitsTaken;
 
-    if (profitsTaken) {
-        profit = betAmount * multiplier;
-        profit = payLoanAutomatically(profit);
-        updateCredits(profit);
-        status = "Won";
+    if (win) {
+        profit = betAmount * usedMultiplier;
+        messageBox.innerText = `Profit taken: +${profit.toFixed(2)}`;
+    } else {
+        messageBox.innerText = `You lost: -${betAmount.toFixed(2)}`;
     }
 
     const crashLog = document.createElement("div");
     crashLog.classList.add("crash-entry");
     crashLog.innerHTML = `
-        <span>💥 ${multiplier.toFixed(2)}x</span>
-        <span>🎲 Bet: ${betAmount}</span>
-        <span>${status === "Won" ? "✅" : "❌"} ${status}</span>
-        <span>${status === "Won" ? `+${profit.toFixed(2)}` : "-"} </span>
+        <span>💥 ${finalMultiplier.toFixed(2)}x</span>
+        <span>🎲 Bet: ${betAmount.toFixed(2)}</span>
+        <span>${win ? `+${profit.toFixed(2)}` : `-${betAmount.toFixed(2)}`}</span>
     `;
-    crashLog.style.color = status === "Won" ? "lime" : "red";
+    crashLog.style.color = win ? "lime" : "red";
 
     document.getElementById("lastCrashes").prepend(crashLog);
 
     updateCurve();
 }
 
+function startGame() {
+    if (gameInProgress) return;
 
-// Event: Place bet
-document.getElementById('submitBet').addEventListener('click', function () {
+    gameInProgress = true;
+    submitBetBtn.disabled = true;
+    takeProfitsBtn.disabled = false;
+
+    elapsedTime = 0;
+    curvePoints = [{ x: 0, y: canvas.height }];
+    crashed = false;
+    profitsTaken = false;
+    profitMultiplier = 0;
+    messageBox.innerText = "";
+
+    updateCurve();
+
+    gameLoop = setInterval(() => {
+        updateCurvePoints();
+        updateCurve();
+    }, 16);
+}
+
+submitBetBtn.addEventListener('click', function () {
     const betValue = parseFloat(betAmountInput.value);
-    if (credits >= betValue && betValue > 0) {
+    if (credits >= betValue && betValue > 0 && !gameInProgress) {
         updateCredits(-betValue);
-        crashed = false;
-        profitsTaken = false;
         betAmount = betValue;
         startGame();
+    }
+});
 
-        gameLoop = setInterval(() => {
-            updateCurvePoints();
-            updateCurve();
-        }, 16);
-
-        setTimeout(() => crashCurve(), getRandomCrashTime(1, 5.5));
-    } else {
-        alert("Insufficient credits or invalid bet.");
+takeProfitsBtn.addEventListener('click', function () {
+    if (!crashed && !profitsTaken && gameInProgress) {
+        profitsTaken = true;
+        profitMultiplier = curvePoints[curvePoints.length - 1].x / 100;
+        let profit = betAmount * profitMultiplier;
+        updateCredits(profit);
+        takeProfitsBtn.disabled = true;
+        messageBox.innerText = `Profit taken: +${profit.toFixed(2)}`;
     }
 });
 
 function setMinBet() {
-    document.getElementById('betAmount').value = 1;
+    betAmountInput.value = 1;
 }
 
 function setMaxBet() {
-    document.getElementById('betAmount').value = Math.floor(credits);
+    betAmountInput.value = Math.floor(credits);
 }
 
-document.getElementById("takeProfits").addEventListener("click", function () {
-    if (!crashed && !profitsTaken) {
-        profitsTaken = true;
-        const multiplier = curvePoints.length / 100;
-        let profit = betAmount * multiplier;
-        profit = payLoanAutomatically(profit);
-        updateCredits(profit);
-    }
-});
-
-
-// On load
 document.addEventListener("DOMContentLoaded", () => {
-    const savedCredits = localStorage.getItem("credits");
-    if (savedCredits !== null) {
-        credits = parseFloat(savedCredits);
-    }
-    updateCreditsDisplay();
+    submitBetBtn.disabled = false;
+    takeProfitsBtn.disabled = true;
 });

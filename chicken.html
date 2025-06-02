@@ -12,6 +12,13 @@
   <link rel="stylesheet" href="styles/chicken.css" />
   <link rel="stylesheet" href="styles/chickengame.css" />
   <link rel="stylesheet" href="styles/car.css" />
+  <script>
+  (function() {
+    if (localStorage.getItem("sidebarCollapsed") === "true") {
+      document.documentElement.classList.add("sidebar-collapsed");
+    }
+  })();
+</script>
 
 </head>
 <body>
@@ -20,10 +27,11 @@
       <nav>
         <ul>
           <li style="padding-top: 0;"><a>­<button class="toggle-sidebar" onclick="toggleSidebar()">☰</button></a></li>
-          <li><a href="index.html" >🎮 <span>All Games</span></a></li>
+          <li><a href="index.html" >🛖 <span>Home</span></a></li>
           <li><a href="slot.html" >🍉 <span>Slot</span></a></li>
           <li><a href="chicken.html" >🐔 <span>Chicken Road</span></a></li>
           <li><a href="mines.html" >💣 <span>Mines</span></a></li>
+          <li><a href="crash.html" >🚀 <span>Crash</span></a></li>
           <li><a href="bank.html" >💳 <span>Bank</span></a></li>
           <li><a href="help.html" >❓ <span>Help</span></a></li>
           <li><a href="update.html" >❕ <span>Update</span></a></li>
@@ -41,6 +49,7 @@
     <main class="main-content"> 
 
       <section id="chicken-section" class="chicken-game">
+        <div id="message">Chicken game</div>
   <div class="game-wrapper">
     <div class="chicken-lane">
       <div class="sidewalk left"></div>
@@ -48,29 +57,29 @@
       <div id="line" class="line" style="display: none;"></div>
       <div class="sidewalk right"></div>
     </div>
-    <div class="controls">
-      <div class="difficulty-selector">
-        <label>Difficulty</label>
-        <button class="difficulty" data-diff="easy">Easy</button>
-        <button class="difficulty" data-diff="medium">Medium</button>
-        <button class="difficulty" data-diff="hard">Hard</button>
-        <button class="difficulty" data-diff="hardcore">Hardcore</button>
-      </div>
-      <div class="bet-controls">
-        <button id="min-bet-button">MIN</button>
-        <input id="bet-input" type="number" placeholder="bet" min="0.01" step="0.01" value="1"/>
-        <button id="max-bet-button">MAX</button>
-      </div>
-      <div class="play-display">
-        <button id="play-button" style="padding-left: 40px; padding-right: 40px;">Play</button>
-        <div id="in-game-buttons" style="display: none;">
-          <button id="cashout-button">Cash Out</button>
-          <button id="go-button" style="padding-right: 40px; padding-left: 40px;">GO</button>
-      </div>
+  </div>
+  <div class="controls-overlay">
+      <div class="controls">
+        <div class="difficulty-selector">
+          <label>Difficulty</label>
+          <button class="difficulty" data-diff="easy">Easy</button>
+          <button class="difficulty" data-diff="medium">Medium</button>
+          <button class="difficulty" data-diff="hard">Hard</button>
+          <button class="difficulty" data-diff="hardcore">Hardcore</button>
+        </div>
+        <div class="bet-controls">
+          <button id="min-bet-button">MIN</button>
+          <input id="bet-input" type="number" placeholder="bet" min="0.01" step="0.01" value="1"/>
+          <button id="max-bet-button">MAX</button>
+        </div>
+        <div class="play-display">
+          <button id="play-button" style="padding-left: 40px; padding-right: 40px;">Play</button>
+          <div id="in-game-buttons" style="display: none;">
+            <button id="cashout-button" style="padding-left: 40px; padding-right: 40px;white-space: nowrap;">Cash Out</button>
+            <button id="go-button" style="padding-left: 40px; padding-right: 40px;">GO</button>
+        </div>
       </div>
     </div>
-    <div id="message"></div>
-  </div>
 </section>
 <section class="how-to-play">
   <h2>How to Play Chicken Road</h2>

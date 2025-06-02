@@ -12,11 +12,6 @@ if (isNaN(dept)) {
 document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("credits").textContent = credits.toFixed(2);
     document.getElementById("debt").textContent = dept.toFixed(2);
-
-    const sidebar = document.querySelector(".sidebar");
-
-    const sidebarCollapsed = localStorage.getItem("sidebarCollapsed") === "true";
-    sidebar.classList.toggle("collapsed", sidebarCollapsed);
 });
 
 let _raccoonState = false;
@@ -44,18 +39,28 @@ Object.defineProperty(window, "raccoon", {
 });
 
 
-function payLoanAutomatically(winnings) {
-    if (dept > 0) {
-        const payment = Math.min(winnings * 0.5, dept);
-        dept -= payment;
-        winnings -= payment;
+function payLoanAutomatically(profit) {
+    // profit is only the money above the bet
+    if (debt > 0 && profit > 0) {
+        const payment = Math.min(profit * 0.5, debt);  // max 50 % of profit, never more than debt
+        debt  -= payment;
+        profit -= payment;  // remove what was just used to pay debt
 
-        localStorage.setItem("dept", dept);
+        // persist + display debt
+        localStorage.setItem("debt", debt.toFixed(2));
+        document.getElementById("debt").textContent = debt.toFixed(2);
+    }
+    return profit;  // whatever’s left is real profit
+}
 
+function payDept(amount) {
+    if (amount < dept) {
+        dept -= amount;
+        localStorage.setItem("dept", dept.toFixed(2));
         document.getElementById("debt").textContent = dept.toFixed(2);
     }
 
-    return winnings; 
+    return dept;
 }
 
 function updateCreditsDisplay() {
@@ -67,8 +72,7 @@ function updateCredits(amount) {
     credits += amount;
     credits = parseFloat(credits.toFixed(2)); 
     localStorage.setItem("credits", credits.toFixed(2)); 
-    const decimalPlaces = parseInt(localStorage.getItem("decimalPlaces"), 10) || 2;
-    document.getElementById("credits").textContent = credits.toFixed(decimalPlaces);
+    document.getElementById("credits").textContent = credits.toFixed(2);
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -80,10 +84,24 @@ document.addEventListener("DOMContentLoaded", () => {
     updateCreditsDisplay();
 });
 
+document.addEventListener("DOMContentLoaded", () => {
+    const sidebarCollapsed = localStorage.getItem("sidebarCollapsed") === "true";
+    const html = document.documentElement;
+    if (sidebarCollapsed) {
+        html.classList.add("sidebar-collapsed");
+    } else {
+        html.classList.remove("sidebar-collapsed");
+    }
+});
+
+
 
 function toggleSidebar() {
-    const sidebar = document.querySelector(".sidebar");
-    sidebar.classList.toggle("collapsed");
-    localStorage.setItem("sidebarCollapsed", sidebar.classList.contains("collapsed"));
+    const html = document.documentElement;
+    html.classList.toggle("sidebar-collapsed");
+    localStorage.setItem("sidebarCollapsed", html.classList.contains("sidebar-collapsed"));
 }
+
+
+
 
