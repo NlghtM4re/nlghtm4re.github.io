@@ -28,7 +28,7 @@ Object.defineProperty(window, "raccoon", {
     configurable: true
 });
 
- window.addEventListener('DOMContentLoaded', () => {
+ document.addEventListener('DOMContentLoaded', () => {
     const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
     
     if (isMobile) {

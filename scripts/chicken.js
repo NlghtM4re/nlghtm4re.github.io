@@ -404,4 +404,22 @@ document.addEventListener("DOMContentLoaded", () => {
     setDefaultChickenPosition();
 });
 
+
+document.getElementById("min-button").addEventListener("click", () => {
+    if (!playing) {
+        betInput.value = 1; // or whatever your min is
+        bet = parseFloat(betInput.value);
+        updatePotentials();
+    }
+});
+
+document.getElementById("max-button").addEventListener("click", () => {
+    if (!playing) {
+        betInput.value = Math.floor(credits); // or Math.min(credits, someMaxLimit)
+        bet = parseFloat(betInput.value);
+        updatePotentials();
+    }
+});
+
+
 generateSteps();
