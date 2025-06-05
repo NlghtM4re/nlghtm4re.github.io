@@ -14,7 +14,6 @@ body {
     flex: 1;
 }
 
-
 /* Sidebar Styles */
 .sidebar {
     width: 200px;
@@ -28,10 +27,10 @@ body {
     position: fixed;
     top: 0;
     left: 0;
-    z-index: 1000; /* Ensure it stays above the main content */
+    z-index: 1000;
 }
 
-.sidebar.collapsed {
+html.sidebar-collapsed .sidebar {
     width: 45px;
 }
 
@@ -45,11 +44,7 @@ body {
     text-decoration: none;
 }
 
-section {
-    padding-top: 20px;
-}
-
-.sidebar.collapsed .logo {
+html.sidebar-collapsed .sidebar .logo {
     opacity: 0;
 }
 
@@ -77,7 +72,7 @@ section {
     justify-content: center;
 }
 
-.sidebar.collapsed nav ul li a span {
+html.sidebar-collapsed .sidebar nav ul li a span {
     display: none;
 }
 
@@ -94,7 +89,64 @@ section {
     padding-inline: 0;
 }
 
-.money{
+/* Game section title */
+.game-section {
+    width: 100%;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.game-section-title {
+    color: #aab2bd;
+    font-size: 12px;
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding-left: 10px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+}
+
+/* Default game title text */
+.game-title-text {
+    display: inline;
+    color: #aab2bd;
+}
+
+/* Collapsed: hide "Games" text and show 🎮 */
+html.sidebar-collapsed .sidebar .game-title-text {
+    color: transparent;
+    font-size: 20px;
+}
+
+html.sidebar-collapsed .sidebar .game-title-text::before {
+    content: "🎮";
+    position: absolute;
+    left: 6.5px;
+    color: #aab2bd;
+}
+
+/* Game links */
+.sidebar .game-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar .game-links li {
+    margin: 10px 0;
+    display: flex;
+    justify-content: flex-start;
+    padding-left: 10px;
+}
+
+.sidebar .game-links li a {
+    font-size: 14px;
+}
+
+/* Additional styling */
+.money {
     padding-top: 30px;
 }
 
@@ -110,29 +162,12 @@ section {
     transition: margin-left 0.3s ease;
 }
 
-.sidebar.collapsed ~ .main-content {
-    margin-left: 45px; /* Matches the collapsed sidebar width */
-}
-
-.sidebar.collapsed ~ .top-bar {
-    left: 45px; /* Matches the collapsed sidebar width */
-    width: calc(100% - 45px);
-}
-
-html.sidebar-collapsed .sidebar {
-    width: 45px;
-}
-
-html.sidebar-collapsed .sidebar .logo {
-    opacity: 0;
-}
-
-html.sidebar-collapsed .sidebar nav ul li a span {
-    display: none;
-}
-
 html.sidebar-collapsed .main-content {
     margin-left: 45px;
+}
+
+html.sidebar-collapsed .game-links li{
+    padding-left: 0;
 }
 
 html.sidebar-collapsed .top-bar {
@@ -140,6 +175,9 @@ html.sidebar-collapsed .top-bar {
     width: calc(100% - 45px);
 }
 
+html.sidebar-collapsed .game-links {
+    font-size: 16px;
+}
 
 /* Top Bar Styles */
 .top-bar {
