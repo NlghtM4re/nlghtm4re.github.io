@@ -54,12 +54,13 @@
     <main class="main-content"> 
 
       <section id="mines-section" class="mines-section" style="padding: 0;">
-        <h1 style="margin: 0; display: flex;">Mine Game</h1>
+        <h3 style="margin: 0; display: flex;">Mine Game</h3>
               <div class="game-box">
                 <div class="game-controls-row">
                     <div class="mine-controls">
                     <div class="bet-controls">
-                        <label for="bet">Bet Amount</label>
+                        <label for="bet" class="bet-amount-display">Bet Amount</label>
+                        <label class="bet-amount-display-no">Bet:</label>
                         <button id="min-bet-btn" onclick="setMinBet()">MIN</button>
                         <input type="number" id="bet" placeholder="$1" min="0.01" step="0.01" value="1" />
                         <button id="max-bet-btn" onclick="setMaxBet()">MAX</button>
@@ -69,7 +70,9 @@
                         <button onclick="decreaseBombs()">-</button>
                         <span id="bomb-count">5</span>
                         <button onclick="increaseBombs()">+</button>
-                        <span style="margin-left:10px;">Tile Multiplier: <span id="pre-game-multiplier">1.20x</span></span>
+                    </div>
+                    <div class="multiplier">
+                        <span>Tile Multiplier: <span id="pre-game-multiplier">1.20x</span></span>
                     </div>
                     <button id="start-game-btn" onclick="startGame()">Start Game</button>
                     <button id="stop-game-btn" onclick="stopGame()" style="display:none;">Stop Game</button>
@@ -84,7 +87,7 @@
                     <p>Potential earnings: <span id="potential-earnings">$0.00</span></p>
                     </div>
                     <div class="game-grid-container">
-                    <div id="game"></div>
+                      <div id="game"></div>
                     </div>
                 </div>
                 <div id="message"></div>

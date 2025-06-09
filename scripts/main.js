@@ -87,20 +87,29 @@ document.addEventListener("DOMContentLoaded", () => {
 document.addEventListener("DOMContentLoaded", () => {
     const sidebarCollapsed = localStorage.getItem("sidebarCollapsed") === "true";
     const html = document.documentElement;
+
     if (sidebarCollapsed) {
         html.classList.add("sidebar-collapsed");
+        html.classList.remove("sidebar-expanded");
     } else {
+        html.classList.add("sidebar-expanded");
         html.classList.remove("sidebar-collapsed");
     }
 });
 
-
-
 function toggleSidebar() {
     const html = document.documentElement;
-    html.classList.toggle("sidebar-collapsed");
-    localStorage.setItem("sidebarCollapsed", html.classList.contains("sidebar-collapsed"));
+    const isCollapsed = html.classList.toggle("sidebar-collapsed");
+
+    if (isCollapsed) {
+        html.classList.remove("sidebar-expanded");
+    } else {
+        html.classList.add("sidebar-expanded");
+    }
+
+    localStorage.setItem("sidebarCollapsed", isCollapsed);
 }
+
 
 
 

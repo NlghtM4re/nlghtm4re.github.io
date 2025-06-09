@@ -6,13 +6,13 @@
   padding: 20px;
   margin: 5px;
   max-width: 1200px;
-  width: 95%;
   box-shadow: 0 4px 32px #000a;
   display: flex;
   flex-direction: column;
   gap: 20px;
   box-sizing: border-box;
   z-index: 1000;
+  padding-right: 30px;
 }
 
 /* Top controls row */
@@ -91,16 +91,16 @@
 .game-main-row {
   display: flex;
   flex-direction: row;
-  flex-wrap: wrap;
   gap: 16px;
   justify-content: center;
   align-items: flex-start;
+  flex-wrap: nowrap;
 }
 
 /* Detail box */
 .game-details {
-  flex: 0 1 240px;
-  max-width: 280px;
+  flex: 0 0 auto;
+  width: 240px;
   background: #222;
   border-radius: 10px;
   padding: 14px;
@@ -111,34 +111,33 @@
   flex-direction: column;
   justify-content: center;
   text-align: center;
+  min-width: 140px;
+  margin-top: 13px;
 }
 
 /* Game grid wrapper */
 .game-grid-container {
-  flex: 1 1 500px;
+  flex: 1 1 auto;
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100%;
-  max-width: 700px;
-  height: auto;
+  margin-top: 10px;
 }
 
 /* Game grid */
 #game {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(40px, 1fr));
-  width: 80%;
-  max-width: 700px;
-  aspect-ratio: 1;
+  grid-template-columns: repeat(auto-fill, 70px);
+  gap: 10px;
+  width: auto;
   margin: auto;
 }
 
 /* Tiles */
 .tile {
-  width: 7.5rem;
-  aspect-ratio: 1;
-  font-size: clamp(0.8rem, 2.5vw, 1.2rem);
+  width: 70px;
+  height: 70px;
+  font-size: 1rem;
   background: #222;
   border-radius: 5px;
   border: 1px solid #444;
@@ -149,8 +148,6 @@
   justify-content: center;
   transition: background 0.2s;
   color: inherit;
-  max-width: 70px;
-  max-height: 70px;
 }
 
 .tile.revealed {
@@ -179,55 +176,210 @@
   min-height: 24px;
 }
 
+.bet-amount-display-no{
+  display: none;
+}
+
 /* Responsive: tablets and down */
-@media (max-width: 950px) {
-  .game-main-row {
-    flex-direction: column;
-    align-items: center;
-  }
 
-  .game-details {
-    width: 90%;
-    max-width: 100%;
-    font-size: 13px;
+@media (max-width:930px){
+  html.sidebar-collapsed #start-game-btn{
+    margin: auto;
   }
+}
 
-  .game-grid-container {
+@media (max-width: 800px){
+  html.sidebar-collapsed .game-main-row{
+    display: block;
+  }
+  html.sidebar-collapsed .game-details{
+    width: 97%;
+  }
+  html.sidebar-collapsed .game-grid-container{
+    margin: auto;
+    padding-top: 10px;
+  }
+  html.sidebar-collapsed #start-game-btn,
+  html.sidebar-collapsed #stop-game-btn {
+    margin: auto;
     width: 100%;
-    max-width: 95vw;
   }
-
-  #game {
-    gap: 0.3rem;
-    max-width: 100%;
+  html.sidebar-collapsed .bet-controls{
+    margin: auto;
   }
-
-  .tile {
-    font-size: 4.5vw;
-    max-width: 50px;
-    max-height: 50px;
+  html.sidebar-collapsed .bomb-controls{
+    margin: auto;
+  }
+  html.sidebar-collapsed .multiplier{
+    display: flex;
+    margin: auto;
+  }
+  
+  html.sidebar-collapsed .game-details p {
+    margin-top: 5px;
+    margin-bottom: 5px;
   }
 }
 
-/* Responsive: small phones */
-@media (max-width: 500px) {
-  .game-details {
+@media (max-width:520px){
+  html.sidebar-collapsed .tile{
+    width: 50px;
+    height: 50px;
+  }
+  html.sidebar-collapsed .bet-amount-display{
+    display: none;
+  }
+  html.sidebar-collapsed .bet-amount-display-no{
+    display: block;
+  }
+
+  html.sidebar-collapsed .game-main-row{
+    display: block;
+  }
+  html.sidebar-collapsed .game-details{
+    margin: auto;
+    width: 100%;
+    padding: 0;
+  }
+  html.sidebar-collapsed .game-grid-container{
+    margin: auto;
+    padding-top: 10px;
+  }
+  html.sidebar-collapsed #start-game-btn,
+  html.sidebar-collapsed #stop-game-btn {
+    margin: auto;
+    width: 100%;
+  }
+  html.sidebar-collapsed .bet-controls{
+    margin: auto;
+  }
+  html.sidebar-collapsed .bomb-controls{
+    margin: auto;
+  }
+  html.sidebar-collapsed .multiplier{
+    display: flex;
+    margin: auto;
+  }
+  
+  html.sidebar-collapsed .game-details p {
+    margin-top: 5px;
+    margin-bottom: 5px;
+  }
+}
+@media (max-width:420px){
+  html.sidebar-collapsed .game-box{
     font-size: 12px;
-    padding: 12px;
   }
-
-  .tile {
-    font-size: 5vw;
-    max-width: 45px;
-    max-height: 45px;
+  html.sidebar-collapsed .tile{
+    width: 45px;
+    height: 45px;
   }
-
-  #game {
-    gap: 0.25rem;
-  }
-
-  #start-game-btn,
-#stop-game-btn {
-  width: 100%;
 }
+
+@media (max-width:380px){
+  html.sidebar-collapsed .game-box{
+    display: none;
+  }
+}
+
+/*side bar expanded*/
+
+@media (max-width:1130px){
+  html.sidebar-expanded #start-game-btn{
+    margin: auto;
+  }
+}
+
+@media (max-width: 1000px){
+  html.sidebar-expanded .game-main-row{
+    display: block;
+  }
+  html.sidebar-expanded .game-details{
+    width: 97%;
+  }
+  html.sidebar-expanded .game-grid-container{
+    margin: auto;
+    padding-top: 10px;
+  }
+  html.sidebar-expanded #start-game-btn,
+  html.sidebar-expanded #stop-game-btn {
+    margin: auto;
+    width: 100%;
+  }
+  html.sidebar-expanded .bet-controls{
+    margin: auto;
+  }
+  html.sidebar-expanded .bomb-controls{
+    margin: auto;
+  }
+  html.sidebar-expanded .multiplier{
+    display: flex;
+    margin: auto;
+  }
+  
+  html.sidebar-expanded .game-details p {
+    margin-top: 5px;
+    margin-bottom: 5px;
+  }
+}
+
+@media (max-width:720px){
+  html.sidebar-expanded .tile{
+    width: 50px;
+    height: 50px;
+  }
+  html.sidebar-expanded .bet-amount-display{
+    display: none;
+  }
+  html.sidebar-expanded .bet-amount-display-no{
+    display: block;
+  }
+
+  html.sidebar-expanded .game-main-row{
+    display: block;
+  }
+  html.sidebar-expanded .game-details{
+    margin: auto;
+    width: 100%;
+    padding: 0;
+  }
+  html.sidebar-expanded .game-grid-container{
+    margin: auto;
+    padding-top: 10px;
+  }
+  html.sidebar-expanded #start-game-btn,
+  html.sidebar-expanded #stop-game-btn {
+    margin: auto;
+    width: 100%;
+  }
+  html.sidebar-expanded .bet-controls{
+    margin: auto;
+  }
+  html.sidebar-expanded .bomb-controls{
+    margin: auto;
+  }
+  html.sidebar-expanded .multiplier{
+    display: flex;
+    margin: auto;
+  }
+  
+  html.sidebar-expanded .game-details p {
+    margin-top: 5px;
+    margin-bottom: 5px;
+  }
+}
+@media (max-width:620px){
+  html.sidebar-expanded .game-box{
+    font-size: 12px;
+  }
+ html.sidebar-expanded .tile{
+    width: 45px;
+    height: 45px;
+  }
+}
+
+@media (max-width:580px){
+  html.sidebar-expanded .game-box{
+    display: none;
+  }
 }

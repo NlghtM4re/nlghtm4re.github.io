@@ -9,6 +9,11 @@ body {
     min-height: 100vh;
 }
 
+h2{
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
 /* App Layout */
 .app {
     flex: 1;
