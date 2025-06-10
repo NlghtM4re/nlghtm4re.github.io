@@ -38,21 +38,6 @@ Object.defineProperty(window, "raccoon", {
     }
 });
 
-
-function payLoanAutomatically(profit) {
-    // profit is only the money above the bet
-    if (debt > 0 && profit > 0) {
-        const payment = Math.min(profit * 0.5, debt);  // max 50 % of profit, never more than debt
-        debt  -= payment;
-        profit -= payment;  // remove what was just used to pay debt
-
-        // persist + display debt
-        localStorage.setItem("debt", debt.toFixed(2));
-        document.getElementById("debt").textContent = debt.toFixed(2);
-    }
-    return profit;  // whatever’s left is real profit
-}
-
 function payDept(amount) {
     if (amount < dept) {
         dept -= amount;
@@ -64,8 +49,8 @@ function payDept(amount) {
 }
 
 function updateCreditsDisplay() {
-    document.getElementById("credits").textContent = credits.toFixed(2);
-    document.getElementById("debt").textContent = dept.toFixed(2);
+    document.getElementById("credits").textContent = credits.toLocaleString("en-US", {minimumFractionDigits: 2,maximumFractionDigits: 2});
+    document.getElementById("debt").textContent = dept.toLocaleString("en-US", {minimumFractionDigits: 2,maximumFractionDigits: 2});
 }
 
 function updateCredits(amount) {

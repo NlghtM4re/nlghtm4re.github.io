@@ -115,3 +115,15 @@
     0% { top: -300px; }
     100% { top: 0; }
 }
+
+@media (max-width: 500px) {
+    html.sidebar-expanded #slot-section {
+        display: none;
+    }
+}
+
+@media (max-width: 340px) {
+    html.sidebar-collapsed #slot-section {
+        display: none;
+    }
+}

@@ -415,3 +415,21 @@ font-weight: bold;
 button#play-button:active {
     transform: scale(0.95);
 }
+
+@media (max-width: 530px) {
+  html.sidebar-expanded #chicken-section {
+    display: none;
+  }
+  html.sidebar-expanded .how-to-play {
+    display: none;
+  }
+}
+
+@media (max-width: 380px) {
+  html.sidebar-collapsed #chicken-section {
+    display: none;
+  }
+  html.sidebar-collapsed .how-to-play {
+    display: none;
+  }
+}

@@ -8,6 +8,7 @@
   <!--<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9742870781660837" crossorigin="anonymous"></script>
   <meta name="google-adsense-account" content="ca-pub-9742870781660837">-->
   <link rel="stylesheet" href="styles/styles.css" />
+  <link rel="stylesheet" href="styles/bank.css" />
   <script>
   (function() {
     if (localStorage.getItem("sidebarCollapsed") === "true") {
@@ -50,14 +51,23 @@
       </div>
     </header>
 
-    <main class="main-content"> 
+    <main class="main-content" style="text-align: left; align-items: center;">
 
       <section id="loan-section">
-        <h2>Loan</h2>
+        <div class="bank">
+          <h2>Bank</h2>
+          <div><span id="bankCreditsDisplay">0</span>$</div>
+          <button id="deposite" onclick="depositeBank()">Deposite</button>
+          <input type="number" placeholder="$" id="depositeInput"><br>
+          <button id="take" onclick="takeBank()">Take</button>
+          <input type="number" placeholder="$" id="takeInput">
+        </div>
+
         <div class="loan">
-          <p>-You can only have loan when you have less than 100 credits <br>
-         -You will have to pay your dept back<br>
-         -There is a maximum of 100 credits per loan<br></p>
+          <h3>Loan</h3>
+          <p>- You can only have loan when you have less than 100 credits <br>
+         - You will have to pay your dept back<br>
+         - There is a maximum of 100 credits per loan<br></p>
           <button onclick="takeLoan(100)">Take $100 Loan</button>
           <br><br>
           <label for="payment-amount">Payment Amount</label>

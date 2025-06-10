@@ -289,10 +289,10 @@ function cashOut() {
         winnings = bet; 
         message.innerText = `💰 You cashed out without taking any steps. Your bet of $${winnings.toFixed(2)} has been refunded!`;
     } else if (stepIndex >= 0 && stepIndex < multipliers.length) {
-        winnings = (bet * multipliers[stepIndex]).toFixed(2);
+        winnings = (bet * multipliers[stepIndex])
         message.innerText = `💰 You cashed out with $${winnings}!`;
     } else {
-        winnings = (bet * multipliers[multipliers.length - 1]).toFixed(2);
+        winnings = (bet * multipliers[multipliers.length - 1]);
         message.innerText = `🏁 You safely reached the sideline and won $${winnings}!`;
     }
 

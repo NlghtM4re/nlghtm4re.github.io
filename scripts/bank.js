@@ -1,5 +1,11 @@
+let bankCredits = parseFloat(localStorage.getItem("bankCredits"));
+if (isNaN(bankCredits)) {
+    bankCredits = 0;
+    localStorage.setItem("bankCredits", bankCredits.toFixed(2));
+}
+
 function takeLoan() {
-    if (credits > 99) {
+    if (credits + bankCredits > 99) {
         alert("You can only take a loan when you have less than 100 credits!");
         return;
     }
@@ -42,3 +48,39 @@ function payLoan() {
 
     alert(`You successfully paid $${paymentAmount.toFixed(2)} towards your loan.`);
 }
+
+function updateBankCredit(amount){
+    bankCredits += amount;
+    localStorage.setItem("bankCredits", bankCredits);
+    document.getElementById("bankCreditsDisplay").textContent = bankCredits.toFixed(2);
+    document.getElementById("credits").textContent = credits.toFixed(2);
+    
+}
+
+function depositeBank() {
+    let amount = parseFloat(document.getElementById("depositeInput").value);
+
+    if (!isNaN(amount) && amount > 0 && amount <= credits) {
+        updateBankCredit(amount);
+        updateCredits(-amount)
+    } else {
+        alert("Invalid amount.");
+    }
+}
+
+
+function takeBank(){
+    let amount = parseFloat(document.getElementById("takeInput").value);
+
+    if (!isNaN(amount) && amount > 0 && amount <= bankCredits) {
+        updateBankCredit(-amount);
+        updateCredits(amount)
+    } else {
+        alert("Invalid amount.");
+    }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById("bankCreditsDisplay").textContent = bankCredits.toFixed(2);
+});
+

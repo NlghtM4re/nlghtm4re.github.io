@@ -196,7 +196,7 @@ function stopGame() {
         displayMessage(`Game stopped. You earned $${totalReward.toFixed(2)}!`);
     }
 
-    payLoanAutomatically(totalReward);
+    updateCredits(totalReward);
 
     // Toggle buttons back and re-enable controls
     document.getElementById('start-game-btn').style.display = '';

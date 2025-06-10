@@ -276,12 +276,6 @@
   }
 }
 
-@media (max-width:380px){
-  html.sidebar-collapsed .game-box{
-    display: none;
-  }
-}
-
 /*side bar expanded*/
 
 @media (max-width:1130px){
@@ -378,8 +372,14 @@
   }
 }
 
-@media (max-width:580px){
-  html.sidebar-expanded .game-box{
+@media (max-width:550px){
+  html.sidebar-expanded #mines-section{
+    display: none;
+  }
+}
+
+@media (max-width:380px){
+  html.sidebar-collapsed #mines-section{
     display: none;
   }
 }
