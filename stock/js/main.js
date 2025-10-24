@@ -1,7 +1,7 @@
-let credits = parseFloat(localStorage.getItem("credits"));
-if (isNaN(credits)) {
-    credits = 100;
-    localStorage.setItem("credits", credits.toFixed(2));
+let money = parseFloat(localStorage.getItem("money"));
+if (isNaN(money)) {
+    money = 100;
+    localStorage.setItem("money", money.toFixed(2));
 }
 let dept = parseFloat(localStorage.getItem("dept"));
 if (isNaN(dept)) {
@@ -10,7 +10,7 @@ if (isNaN(dept)) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    document.getElementById("credits").textContent = credits.toFixed(2);
+    document.getElementById("money").textContent = money.toFixed(2);
     document.getElementById("debt").textContent = dept.toFixed(2);
 });
 
@@ -42,25 +42,25 @@ function payDept(amount) {
     return dept;
 }
 
-function updateCreditsDisplay() {
-    document.getElementById("credits").textContent = credits.toLocaleString("en-US", {minimumFractionDigits: 2,maximumFractionDigits: 2});
+function updatemoneyDisplay() {
+    document.getElementById("money").textContent = money.toLocaleString("en-US", {minimumFractionDigits: 2,maximumFractionDigits: 2});
     document.getElementById("debt").textContent = dept.toLocaleString("en-US", {minimumFractionDigits: 2,maximumFractionDigits: 2});
 }
 
-function updateCredits(amount) {
-    credits += amount;
-    credits = parseFloat(credits.toFixed(2)); 
-    localStorage.setItem("credits", credits.toFixed(2)); 
-    document.getElementById("credits").textContent = credits.toFixed(2);
+function updatemoney(amount) {
+    money += amount;
+    money = parseFloat(money.toFixed(2)); 
+    localStorage.setItem("money", money.toFixed(2)); 
+    document.getElementById("money").textContent = money.toFixed(2);
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    const savedCredits = localStorage.getItem("credits");
-    if (savedCredits !== null) {
-        credits = parseFloat(savedCredits);
+    const savedmoney = localStorage.getItem("money");
+    if (savedmoney !== null) {
+        money = parseFloat(savedmoney);
     }
 
-    updateCreditsDisplay();
+    updatemoneyDisplay();
 });
 
 document.addEventListener("DOMContentLoaded", () => {

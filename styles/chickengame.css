@@ -217,7 +217,6 @@ z-index: 2;
 /* Inner Controls Container */
 .controls {
   display: flex;
-  flex-wrap: wrap;
   justify-content: center;
   align-items: center;
   gap: 12px;
@@ -225,7 +224,7 @@ z-index: 2;
   width: 100%;
   max-width: 1200px;
   box-sizing: border-box;
-  margin-right: 20px;
+  
 
 }
 
@@ -273,7 +272,7 @@ z-index: 2;
   transition: background-color 0.3s, transform 0.2s;
   box-sizing: border-box;
   flex: 1;
-  min-width: 100px;
+  padding: 10px;
   
 }
 
@@ -290,10 +289,9 @@ z-index: 2;
 .difficulty-selector {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  min-width: 260px;
 }
 
-.difficulty-selector label {
+.controls label {
   grid-column: 1 / -1;
   font-size: 0.85rem;
   font-weight: 600;
@@ -304,7 +302,7 @@ z-index: 2;
 
 .difficulty-selector button {
   width: 100%;
-  padding: 6px 0;
+  padding: 12px;
   font-size: 12px;
   background-color: var(--input-bg);
   border: 2px solid var(--primary-color);
@@ -312,9 +310,7 @@ z-index: 2;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  aspect-ratio: 3 / 1;
 }
-
 .difficulty-selector button.selected {
   border-color: yellow;
 }
@@ -332,12 +328,7 @@ z-index: 2;
   .controls {
     flex-direction: column;
     align-items: stretch;
-    padding: 12px;
-  }
-
-  .difficulty-selector {
-    grid-template-columns: repeat(2, 1fr);
-    width: 100%;
+    padding: 0;
   }
 
   .difficulty-selector label {
@@ -355,6 +346,10 @@ z-index: 2;
     width: 100%;
     height: 44px;
     font-size: 15px;
+  }
+
+  .controls button {
+    aspect-ratio: 3 / 1;
   }
 }
 
@@ -374,13 +369,14 @@ font-weight: bold;
 }
 
 .bet-controls {
-  display: flex;
+  display: grid;
   align-items: center;
   gap: 8px;
   padding: 6px 10px;
   border-radius: 8px;
   box-sizing: border-box;
-  min-width: 200px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+
 }
 
 .bet-controls input#bet-input {
@@ -425,11 +421,20 @@ button#play-button:active {
   }
 }
 
+@media (max-width: 480px) {
+  .controls button {
+    font-size: 12px;
+  }
+}
+
 @media (max-width: 380px) {
   html.sidebar-collapsed #chicken-section {
     display: none;
   }
   html.sidebar-collapsed .how-to-play {
     display: none;
+  }
+  .controls button {
+    font-size: 10px;
   }
 }
