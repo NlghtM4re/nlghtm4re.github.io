@@ -1,19 +1,167 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Global Counter</title>
+  <title>🌍 Global Counter</title>
+  <style>
+    :root {
+      --bg-dark: #2a2a2a;
+      --bg-medium: #3a3a3a;
+      --bg-light: #444;
+      --accent: #00bcd4;
+      --text: #fff;
+      --muted: #ccc;
+    }
+
+    body {
+      margin: 0;
+      height: 100vh;
+      display: grid;
+      grid-template-rows: 70px 1fr;
+      grid-template-columns: 1fr 2fr 1fr;
+      grid-template-areas:
+        "header header header"
+        "left center right";
+      background: var(--bg-dark);
+      color: var(--text);
+      font-family: 'Segoe UI', Arial, sans-serif;
+    }
+
+    header {
+      grid-area: header;
+      background: var(--bg-light);
+      display: flex;
+      align-items: center;
+      padding-left: 30px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+      font-size: 26px;
+      font-weight: bold;
+      color: var(--text);
+    }
+
+    .left-panel {
+      grid-area: left;
+      background: var(--bg-medium);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 30px;
+      gap: 10px;
+      border-right: 2px solid #555;
+      box-shadow: inset -3px 0 6px rgba(0,0,0,0.3);
+    }
+
+    .center {
+      grid-area: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+
+    .right-panel {
+      grid-area: right;
+      background: var(--bg-medium);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 30px;
+      border-left: 2px solid #555;
+      box-shadow: inset 3px 0 6px rgba(0,0,0,0.3);
+    }
+
+    #count {
+      font-size: 72px;
+      font-weight: bold;
+      margin: 20px;
+      color: var(--accent);
+      text-shadow: 0 0 15px rgba(0, 188, 212, 0.5);
+    }
+
+    button {
+      background: var(--accent);
+      border: none;
+      color: white;
+      padding: 12px 25px;
+      font-size: 18px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    button:hover {
+      background: #0097a7;
+    }
+
+    #leaderboard {
+      width: 80%;
+      height: 80%;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    #leaderboard h3 {
+      margin-top: 0;
+      text-align: right;
+      border-bottom: 2px solid var(--accent);
+      padding-bottom: 5px;
+    }
+
+    #leaderboard ul {
+      list-style: none;
+      padding: 0;
+      margin: 10px 0 0 0;
+    }
+
+    #leaderboard li {
+      background: #555;
+      margin-bottom: 8px;
+      padding: 6px 10px;
+      border-radius: 6px;
+      color: var(--muted);
+      text-align: right;
+      transition: background 0.2s;
+    }
+
+    #leaderboard li:hover {
+      background: #666;
+    }
+
+    .small-text {
+      font-size: 14px;
+      color: #bbb;
+      max-width: 220px;
+      margin-top: 5px;
+    }
+  </style>
 </head>
 <body>
-  <h1>🌍 Global Counter</h1>
-  <h2 id="count">Loading...</h2>
-  <button id="btn">+1</button>
+  <header>🌍 Global Counter</header>
+
+  <div class="left-panel">
+    <h2 id="username-display">Name: ...</h2>
+    <h3>Your clicks: <span id="personal-count">0</span></h3>
+    <button id="change-name">Change Name</button>
+    <div class="small-text">Changing your name resets your leaderboard score.</div>
+  </div>
+
+  <div class="center">
+    <h2 id="count">Loading...</h2>
+    <button id="btn">+1</button>
+  </div>
+
+  <div class="right-panel">
+    <div id="leaderboard">
+      <h3>🏆 Leaderboard</h3>
+      <ul id="leaderboard-list"></ul>
+    </div>
+  </div>
 
   <script type="module">
-    // Import Firebase functions
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
-    import { getDatabase, ref, onValue, runTransaction } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
+    import { getDatabase, ref, onValue, runTransaction, set } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
 
-    // Your Firebase configuration
     const firebaseConfig = {
       apiKey: "AIzaSyAQ8hwInUpT050ZgOY3J5IHwXXByPhS5uI",
       authDomain: "counter-7e3e2.firebaseapp.com",
@@ -25,28 +173,68 @@
       measurementId: "G-PKK7P26S6D"
     };
 
-    // Initialize Firebase
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
-    // Get references to elements
     const countEl = document.getElementById("count");
     const btn = document.getElementById("btn");
+    const usernameDisplay = document.getElementById("username-display");
+    const personalCountEl = document.getElementById("personal-count");
+    const leaderboardList = document.getElementById("leaderboard-list");
+    const changeNameBtn = document.getElementById("change-name");
 
-    // Reference to the counter in the database
     const countRef = ref(db, "counter/value");
+    const leaderboardRef = ref(db, "leaderboard");
 
-    // Listen for realtime updates
+    let username = localStorage.getItem("username");
+    let personalClicks = parseInt(localStorage.getItem("personalClicks") || 0);
+
+    function askName() {
+      let name = prompt("Enter your name:");
+      if (!name) name = "Guest" + Math.floor(Math.random() * 1000);
+      username = name;
+      personalClicks = 0;
+      localStorage.setItem("username", username);
+      localStorage.setItem("personalClicks", personalClicks);
+      updateNameDisplay();
+      updateLeaderboard();
+    }
+
+    function updateNameDisplay() {
+      usernameDisplay.textContent = `Name: ${username}`;
+      personalCountEl.textContent = personalClicks;
+    }
+
     onValue(countRef, (snapshot) => {
       countEl.textContent = snapshot.val() ?? 0;
     });
 
-    // Increment the counter when button clicked
-    btn.addEventListener("click", () => {
-      runTransaction(countRef, (currentValue) => {
-        return (currentValue || 0) + 1;
-      });
+    onValue(leaderboardRef, (snapshot) => {
+      const data = snapshot.val() || {};
+      const sorted = Object.entries(data).sort((a, b) => b[1] - a[1]);
+      leaderboardList.innerHTML = sorted.map(([name, score]) => `<li>${name}: ${score}</li>`).join("");
     });
+
+    btn.addEventListener("click", () => {
+      runTransaction(countRef, (currentValue) => (currentValue || 0) + 1);
+      personalClicks++;
+      localStorage.setItem("personalClicks", personalClicks);
+      updateNameDisplay();
+      set(ref(db, "leaderboard/" + username), personalClicks);
+    });
+
+    changeNameBtn.addEventListener("click", () => {
+      localStorage.removeItem("username");
+      localStorage.removeItem("personalClicks");
+      askName();
+    });
+
+    function updateLeaderboard() {
+      set(ref(db, "leaderboard/" + username), personalClicks);
+    }
+
+    if (!username) askName();
+    else updateNameDisplay();
   </script>
 </body>
 </html>
