@@ -74,6 +74,23 @@ header {
   word-break: break-word; /* ensure long words wrap */
 }
 
+.chat-messages div {
+  background: #555;
+  padding: 6px 10px;
+  margin-bottom: 6px;
+  border-radius: 6px;
+  word-wrap: break-word;
+  white-space: pre-wrap; /* wrap long text */
+  color: var(--text);
+  font-size: 14px;
+}
+
+.chat-messages div.self {
+  background: var(--accent);
+  color: #000;
+  align-self: flex-end;
+}
+
 .chat-input {
   display: flex;
   gap: 5px;
