@@ -14,8 +14,8 @@
   </header>
 
   <div class="left-panel">
-    <h3>Chat</h3>
-    <div class="chat-messages" id="chat-messages"></div>
+    <h3>💬 Global Chat</h3>
+    <div id="chat-messages" class="chat-messages"></div>
     <div class="chat-input">
       <input type="text" id="chat-input" placeholder="Type a message...">
       <button id="chat-send">Send</button>
@@ -37,7 +37,7 @@
   </div>
 
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
 import { getDatabase, ref, onValue, runTransaction, set, get, push, remove, query, limitToLast } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
 
 const firebaseConfig = {
@@ -73,7 +73,6 @@ let username = localStorage.getItem("username");
 let personalClicks = parseInt(localStorage.getItem("personalClicks") || 0);
 let unsyncedClicks = 0;
 
-// Change name function
 async function askName() {
   let oldUsername = username;
   let name;
@@ -90,11 +89,8 @@ async function askName() {
   updateNameDisplay();
 
   // Delete old name from DB if changed
-  if(oldUsername && oldUsername !== username) {
-    remove(ref(db, `leaderboard/${oldUsername}`));
-  }
+  if(oldUsername && oldUsername !== username) remove(ref(db, `leaderboard/${oldUsername}`));
 
-  // Update leaderboard with current clicks (does not reset)
   updateLeaderboard();
   alert("Your name has been changed.");
 }
@@ -147,27 +143,29 @@ function updateLeaderboard(){
 }
 
 // Chat
-chatSend.addEventListener("click", ()=>{
+function sendChatMessage(){
   const msg = chatInput.value.trim();
   if(msg!==""){
-    push(chatRef, {name: username, message: msg}).then(() => {
-      // Keep only last 50 messages
+    push(chatRef, {name: username, message: msg}).then(()=>{
       const q = query(chatRef, limitToLast(51));
-      onValue(q, snapshot => {
+      onValue(q, snapshot=>{
         const vals = snapshot.val() || {};
         const keys = Object.keys(vals);
-        if(keys.length > 50){
-          remove(ref(db,"chat/"+keys[0])); // delete oldest
-        }
+        if(keys.length > 50) remove(ref(db,"chat/"+keys[0]));
       }, {onlyOnce:true});
     });
     chatInput.value="";
   }
+}
+
+chatSend.addEventListener("click", sendChatMessage);
+chatInput.addEventListener("keydown", e=>{
+  if(e.key === "Enter") sendChatMessage();
 });
 
 onValue(query(chatRef, limitToLast(50)), snapshot=>{
   const data = snapshot.val()||{};
-  chatMessages.innerHTML = Object.values(data).map(m=>`<div><strong>${m.name}:</strong> ${m.message}</div>`).join("");
+  chatMessages.innerHTML = Object.values(data).map(m=>`${m.name}: ${m.message}`).join("\n");
   chatMessages.scrollTop = chatMessages.scrollHeight;
 });
 
@@ -175,6 +173,8 @@ onValue(query(chatRef, limitToLast(50)), snapshot=>{
 if(!username) askName();
 else updateNameDisplay();
 
+
   </script>
 </body>
 </html>
+

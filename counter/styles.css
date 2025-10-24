@@ -19,6 +19,7 @@ body {
   background: var(--bg-dark);
   color: var(--text);
   font-family: 'Segoe UI', Arial, sans-serif;
+  overflow: hidden; /* prevent page scroll */
 }
 
 header {
@@ -50,6 +51,7 @@ header {
   gap: 10px;
   border-right: 2px solid #555;
   box-shadow: inset -3px 0 6px rgba(0,0,0,0.3);
+  overflow: hidden;
 }
 
 .left-panel h3 {
@@ -64,8 +66,12 @@ header {
   overflow-y: auto;
   background: #444;
   padding: 10px;
+  padding-right: 5px;
   border-radius: 6px;
   margin-bottom: 10px;
+  white-space: pre-wrap; /* preserve line breaks */
+  word-wrap: break-word;
+  word-break: break-word; /* ensure long words wrap */
 }
 
 .chat-input {
@@ -109,6 +115,7 @@ header {
   padding: 20px;
   border-left: 2px solid #555;
   box-shadow: inset 3px 0 6px rgba(0,0,0,0.3);
+  overflow: hidden;
 }
 
 #count {
@@ -136,9 +143,29 @@ button:hover {
 
 #leaderboard {
   width: 100%;
-  max-height: 70vh;
+  max-height: calc(100% - 50px); /* leave space for rank + button */
   overflow-y: auto;
   margin-bottom: 10px;
+  padding-left: 5px; /* add left padding so scrollbar doesn't cover text */
+  box-sizing: border-box;
+}
+
+/* Scrollbars for leaderboard & chat */
+#leaderboard::-webkit-scrollbar,
+.chat-messages::-webkit-scrollbar {
+  width: 10px;
+}
+
+#leaderboard::-webkit-scrollbar-track,
+.chat-messages::-webkit-scrollbar-track {
+  background: #3a3a3a;
+  border-radius: 4px;
+}
+
+#leaderboard::-webkit-scrollbar-thumb,
+.chat-messages::-webkit-scrollbar-thumb {
+  background: var(--accent);
+  border-radius: 4px;
 }
 
 #leaderboard h3 {
@@ -146,12 +173,14 @@ button:hover {
   text-align: right;
   border-bottom: 2px solid var(--accent);
   padding-bottom: 5px;
+  padding-right: 5px;
 }
 
 #leaderboard ul {
   list-style: none;
   padding: 0;
   margin: 10px 0 0 0;
+  padding-right: 5px;
 }
 
 #leaderboard li {
