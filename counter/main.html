@@ -2,161 +2,24 @@
 <html>
 <head>
   <title>🌍 Global Counter</title>
-  <style>
-    :root {
-      --bg-dark: #2a2a2a;
-      --bg-medium: #3a3a3a;
-      --bg-light: #444;
-      --accent: #00bcd4;
-      --text: #fff;
-      --muted: #ccc;
-    }
-
-    body {
-      margin: 0;
-      height: 100vh;
-      display: grid;
-      grid-template-rows: 70px 1fr;
-      grid-template-columns: 1fr 2fr 1fr;
-      grid-template-areas:
-        "header header header"
-        "left center right";
-      background: var(--bg-dark);
-      color: var(--text);
-      font-family: 'Segoe UI', Arial, sans-serif;
-    }
-
-    header {
-      grid-area: header;
-      background: var(--bg-light);
-      display: flex;
-      align-items: center;
-      padding-left: 30px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-      font-size: 26px;
-      font-weight: bold;
-      color: var(--text);
-    }
-
-    .left-panel {
-      grid-area: left;
-      background: var(--bg-medium);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: flex-start;
-      padding: 30px;
-      gap: 10px;
-      border-right: 2px solid #555;
-      box-shadow: inset -3px 0 6px rgba(0,0,0,0.3);
-    }
-
-    .center {
-      grid-area: center;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-    }
-
-    .right-panel {
-      grid-area: right;
-      background: var(--bg-medium);
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      padding: 30px;
-      border-left: 2px solid #555;
-      box-shadow: inset 3px 0 6px rgba(0,0,0,0.3);
-    }
-
-    #count {
-      font-size: 72px;
-      font-weight: bold;
-      margin: 20px;
-      color: var(--accent);
-      text-shadow: 0 0 15px rgba(0, 188, 212, 0.5);
-    }
-
-    button {
-      background: var(--accent);
-      border: none;
-      color: white;
-      padding: 12px 25px;
-      font-size: 18px;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-
-    button:hover {
-      background: #0097a7;
-    }
-
-    #leaderboard {
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      max-height: calc(100vh - 70px - 60px); /* window height minus header and padding */
-    }
-
-    #leaderboard h3 {
-      margin-top: 0;
-      text-align: right;
-      border-bottom: 2px solid var(--accent);
-      padding-bottom: 5px;
-    }
-
-    #leaderboard-list {
-      list-style: none;
-      padding: 0;
-      margin: 10px 0 0 0;
-      flex: 1;
-      overflow-y: auto; /* scroll if too many entries */
-    }
-
-    #leaderboard li {
-      background: #555;
-      margin-bottom: 8px;
-      padding: 6px 10px;
-      border-radius: 6px;
-      color: var(--muted);
-      text-align: right;
-      transition: background 0.2s;
-      word-break: break-word; /* wrap long names */
-    }
-
-    #leaderboard li:hover {
-      background: #666;
-    }
-
-    #my-rank {
-      margin-top: 5px;
-      padding: 6px 10px;
-      background: #222;
-      color: var(--accent);
-      font-weight: bold;
-      border-radius: 6px;
-      text-align: right;
-    }
-
-    .small-text {
-      font-size: 14px;
-      color: #bbb;
-      max-width: 220px;
-      margin-top: 5px;
-    }
-  </style>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <header>🌍 Global Counter</header>
+  <header>
+    🌍 Global Counter
+    <div class="header-right">
+      <span id="username-display">Name: ...</span> | 
+      <span>Your clicks: <span id="personal-count">0</span></span>
+    </div>
+  </header>
 
   <div class="left-panel">
-    <h2 id="username-display">Name: ...</h2>
-    <h3>Your clicks: <span id="personal-count">0</span></h3>
-    <button id="change-name">Change Name</button>
-    <div class="small-text">Changing your name resets your leaderboard score.</div>
+    <h3>Chat</h3>
+    <div class="chat-messages" id="chat-messages"></div>
+    <div class="chat-input">
+      <input type="text" id="chat-input" placeholder="Type a message...">
+      <button id="chat-send">Send</button>
+    </div>
   </div>
 
   <div class="center">
@@ -168,111 +31,150 @@
     <div id="leaderboard">
       <h3>🏆 Leaderboard</h3>
       <ul id="leaderboard-list"></ul>
-      <div id="my-rank">Your rank: -</div>
     </div>
+    <div id="my-rank">Your rank: -</div>
+    <button id="change-name">Change Name</button>
   </div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
-    import { getDatabase, ref, onValue, runTransaction, set, get } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
+import { getDatabase, ref, onValue, runTransaction, set, get, push, remove, query, limitToLast } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyAQ8hwInUpT050ZgOY3J5IHwXXByPhS5uI",
-      authDomain: "counter-7e3e2.firebaseapp.com",
-      databaseURL: "https://counter-7e3e2-default-rtdb.firebaseio.com",
-      projectId: "counter-7e3e2",
-      storageBucket: "counter-7e3e2.firebasestorage.app",
-      messagingSenderId: "1095835005773",
-      appId: "1:1095835005773:web:26b3b279d52dbb2e64fd04",
-      measurementId: "G-PKK7P26S6D"
-    };
+const firebaseConfig = {
+  apiKey: "AIzaSyAQ8hwInUpT050ZgOY3J5IHwXXByPhS5uI",
+  authDomain: "counter-7e3e2.firebaseapp.com",
+  databaseURL: "https://counter-7e3e2-default-rtdb.firebaseio.com",
+  projectId: "counter-7e3e2",
+  storageBucket: "counter-7e3e2.firebasestorage.app",
+  messagingSenderId: "1095835005773",
+  appId: "1:1095835005773:web:26b3b279d52dbb2e64fd04",
+  measurementId: "G-PKK7P26S6D"
+};
 
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
 
-    const countEl = document.getElementById("count");
-    const btn = document.getElementById("btn");
-    const usernameDisplay = document.getElementById("username-display");
-    const personalCountEl = document.getElementById("personal-count");
-    const leaderboardList = document.getElementById("leaderboard-list");
-    const myRankEl = document.getElementById("my-rank");
-    const changeNameBtn = document.getElementById("change-name");
+const countEl = document.getElementById("count");
+const btn = document.getElementById("btn");
+const usernameDisplay = document.getElementById("username-display");
+const personalCountEl = document.getElementById("personal-count");
+const leaderboardList = document.getElementById("leaderboard-list");
+const myRankEl = document.getElementById("my-rank");
+const changeNameBtn = document.getElementById("change-name");
+const chatMessages = document.getElementById("chat-messages");
+const chatInput = document.getElementById("chat-input");
+const chatSend = document.getElementById("chat-send");
 
-    const countRef = ref(db, "counter/value");
-    const leaderboardRef = ref(db, "leaderboard");
+const countRef = ref(db, "counter/value");
+const leaderboardRef = ref(db, "leaderboard");
+const chatRef = ref(db, "chat");
 
-    let username = localStorage.getItem("username");
-    let personalClicks = parseInt(localStorage.getItem("personalClicks") || 0);
-    let unsyncedClicks = 0;
+let username = localStorage.getItem("username");
+let personalClicks = parseInt(localStorage.getItem("personalClicks") || 0);
+let unsyncedClicks = 0;
 
-    async function askName() {
-      let name;
-      while (true) {
-        name = prompt("Enter your name:") || "Guest" + Math.floor(Math.random() * 1000);
-        const snapshot = await get(ref(db, `leaderboard/${name}`));
-        if (!snapshot.exists()) break;
-        alert("This name is already taken. Please choose another one.");
-      }
-      username = name;
-      personalClicks = 0;
-      unsyncedClicks = 0;
-      localStorage.setItem("username", username);
-      localStorage.setItem("personalClicks", personalClicks);
-      updateNameDisplay();
-      updateLeaderboard();
-    }
+// Change name function
+async function askName() {
+  let oldUsername = username;
+  let name;
+  while(true) {
+    name = prompt("Enter your name:", username);
+    if(name === null) return; // Cancel, keep current name
+    if(name.trim() === "") continue;
+    const snapshot = await get(ref(db, `leaderboard/${name}`));
+    if(!snapshot.exists()) break;
+    alert("This name is already taken. Choose another.");
+  }
+  username = name;
+  localStorage.setItem("username", username);
+  updateNameDisplay();
 
-    function updateNameDisplay() {
-      usernameDisplay.textContent = `Name: ${username}`;
-      personalCountEl.textContent = personalClicks;
-    }
+  // Delete old name from DB if changed
+  if(oldUsername && oldUsername !== username) {
+    remove(ref(db, `leaderboard/${oldUsername}`));
+  }
 
-    onValue(countRef, snapshot => {
-      countEl.textContent = snapshot.val() ?? 0;
+  // Update leaderboard with current clicks (does not reset)
+  updateLeaderboard();
+  alert("Your name has been changed.");
+}
+
+function updateNameDisplay() {
+  usernameDisplay.textContent = `Name: ${username}`;
+  personalCountEl.textContent = personalClicks;
+}
+
+// Global counter
+onValue(countRef, snapshot => {
+  countEl.textContent = snapshot.val() ?? 0;
+});
+
+// Leaderboard
+onValue(leaderboardRef, snapshot => {
+  const data = snapshot.val() || {};
+  const sorted = Object.entries(data).sort((a,b)=>b[1]-a[1]);
+  leaderboardList.innerHTML = sorted.map(([name,score])=>
+    `<li${name===username?' style="color: var(--accent); font-weight:bold;"':''}>${name}: ${score}</li>`
+  ).join("");
+  const rank = sorted.findIndex(([name])=>name===username)+1;
+  myRankEl.textContent = rank>0?`Your rank: ${rank} / ${sorted.length}`:"Your rank: -";
+});
+
+// Click +1
+btn.addEventListener("click", ()=>{
+  runTransaction(countRef, c=>(c||0)+1);
+  personalClicks++;
+  unsyncedClicks++;
+  localStorage.setItem("personalClicks", personalClicks);
+  updateNameDisplay();
+  if(unsyncedClicks >= 5){
+    updateLeaderboard();
+    unsyncedClicks = 0;
+  }
+});
+
+setInterval(()=>{
+  if(unsyncedClicks>0){
+    updateLeaderboard();
+    unsyncedClicks=0;
+  }
+},10000);
+
+changeNameBtn.addEventListener("click", askName);
+
+function updateLeaderboard(){
+  set(ref(db,"leaderboard/"+username), personalClicks);
+}
+
+// Chat
+chatSend.addEventListener("click", ()=>{
+  const msg = chatInput.value.trim();
+  if(msg!==""){
+    push(chatRef, {name: username, message: msg}).then(() => {
+      // Keep only last 50 messages
+      const q = query(chatRef, limitToLast(51));
+      onValue(q, snapshot => {
+        const vals = snapshot.val() || {};
+        const keys = Object.keys(vals);
+        if(keys.length > 50){
+          remove(ref(db,"chat/"+keys[0])); // delete oldest
+        }
+      }, {onlyOnce:true});
     });
+    chatInput.value="";
+  }
+});
 
-    onValue(leaderboardRef, snapshot => {
-      const data = snapshot.val() || {};
-      const sorted = Object.entries(data).sort((a, b) => b[1] - a[1]);
-      leaderboardList.innerHTML = sorted.map(([name, score]) => {
-        return `<li${name === username ? ' style="color: var(--accent); font-weight:bold;"' : ''}>${name}: ${score}</li>`;
-      }).join("");
+onValue(query(chatRef, limitToLast(50)), snapshot=>{
+  const data = snapshot.val()||{};
+  chatMessages.innerHTML = Object.values(data).map(m=>`<div><strong>${m.name}:</strong> ${m.message}</div>`).join("");
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+});
 
-      const rank = sorted.findIndex(([name]) => name === username) + 1;
-      myRankEl.textContent = rank > 0 ? `Your rank: ${rank} / ${sorted.length}` : "Your rank: -";
-    });
+// Initialize
+if(!username) askName();
+else updateNameDisplay();
 
-    btn.addEventListener("click", () => {
-      runTransaction(countRef, current => (current || 0) + 1);
-      personalClicks++;
-      unsyncedClicks++;
-      localStorage.setItem("personalClicks", personalClicks);
-      updateNameDisplay();
-      if (unsyncedClicks >= 5) {
-        updateLeaderboard();
-        unsyncedClicks = 0;
-      }
-    });
-
-    setInterval(() => {
-      if (unsyncedClicks > 0) {
-        updateLeaderboard();
-        unsyncedClicks = 0;
-      }
-    }, 10000);
-
-    changeNameBtn.addEventListener("click", () => {
-      localStorage.removeItem("username");
-      localStorage.removeItem("personalClicks");
-      askName();
-    });
-
-    function updateLeaderboard() {
-      set(ref(db, "leaderboard/" + username), personalClicks);
-    }
-
-    if (!username) askName();
-    else updateNameDisplay();
   </script>
 </body>
 </html>
