@@ -184,14 +184,16 @@ button:hover {
 }
 
 #leaderboard li {
+  display: flex;
+  justify-content: space-between; /* rank on left, name+score on right */
+  align-items: center;
   background: #555;
   margin-bottom: 8px;
   padding: 6px 10px;
   border-radius: 6px;
   color: var(--muted);
-  text-align: right;
-  word-break: break-word;
   transition: background 0.2s;
+  word-break: break-word;
 }
 
 #leaderboard li:hover {
@@ -206,4 +208,26 @@ button:hover {
 
 #change-name {
   width: 100%;
+}
+
+.rank {
+  flex-shrink: 0;
+  font-weight: bold;
+  min-width: 25px;
+  text-align: left; /* fully left */
+  margin-right: 10px;
+  color: var(--text);
+}
+
+.rank-1 {
+  color: gold;
+  font-size: 20px;
+}
+
+.rank-2 {
+  color: silver;
+}
+
+.rank-3 {
+  color: #cd7f32; /* bronze */
 }

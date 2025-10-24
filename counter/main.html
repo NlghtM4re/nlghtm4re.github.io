@@ -74,26 +74,22 @@ let personalClicks = parseInt(localStorage.getItem("personalClicks") || 0);
 let unsyncedClicks = 0;
 
 async function askName() {
-  let oldUsername = username;
   let name;
-  while(true) {
-    name = prompt("Enter your name:", username);
-    if(name === null) return; // Cancel, keep current name
-    if(name.trim() === "") continue;
+  while (true) {
+    name = prompt("Enter your name (max 20 characters):") || "Guest" + Math.floor(Math.random() * 1000);
+    name = name.substring(0, 20); // enforce max 20 characters
+
     const snapshot = await get(ref(db, `leaderboard/${name}`));
-    if(!snapshot.exists()) break;
-    alert("This name is already taken. Choose another.");
+    if (!snapshot.exists()) break;
+    alert("This name is already taken. Please choose another one.");
   }
+
   username = name;
   localStorage.setItem("username", username);
   updateNameDisplay();
-
-  // Delete old name from DB if changed
-  if(oldUsername && oldUsername !== username) remove(ref(db, `leaderboard/${oldUsername}`));
-
   updateLeaderboard();
-  alert("Your name has been changed.");
 }
+
 
 function updateNameDisplay() {
   usernameDisplay.textContent = `Name: ${username}`;
@@ -105,16 +101,26 @@ onValue(countRef, snapshot => {
   countEl.textContent = snapshot.val() ?? 0;
 });
 
-// Leaderboard
 onValue(leaderboardRef, snapshot => {
   const data = snapshot.val() || {};
-  const sorted = Object.entries(data).sort((a,b)=>b[1]-a[1]);
-  leaderboardList.innerHTML = sorted.map(([name,score])=>
-    `<li${name===username?' style="color: var(--accent); font-weight:bold;"':''}>${name}: ${score}</li>`
-  ).join("");
-  const rank = sorted.findIndex(([name])=>name===username)+1;
-  myRankEl.textContent = rank>0?`Your rank: ${rank} / ${sorted.length}`:"Your rank: -";
+  const sorted = Object.entries(data).sort((a, b) => b[1] - a[1]);
+
+  leaderboardList.innerHTML = sorted.map(([name, score], index) => {
+    let rankClass = "";
+    if(index === 0) rankClass = "rank-1";
+    else if(index === 1) rankClass = "rank-2";
+    else if(index === 2) rankClass = "rank-3";
+
+    return `<li${name === username ? ' style="color: var(--accent); font-weight:bold;"' : ''}>
+              <span class="rank ${rankClass}">${index + 1}</span>
+              <span>${name}: ${score}</span>
+            </li>`;
+  }).join("");
+
+  const rank = sorted.findIndex(([name]) => name === username) + 1;
+  myRankEl.textContent = rank > 0 ? `Your rank: ${rank} / ${sorted.length}` : "Your rank: -";
 });
+
 
 // Click +1
 btn.addEventListener("click", ()=>{
