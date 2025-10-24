@@ -65,7 +65,7 @@
       background: var(--bg-medium);
       display: flex;
       justify-content: center;
-      align-items: center;
+      align-items: flex-start;
       padding: 30px;
       border-left: 2px solid #555;
       box-shadow: inset 3px 0 6px rgba(0,0,0,0.3);
@@ -95,10 +95,10 @@
     }
 
     #leaderboard {
-      width: 80%;
-      height: 80%;
-      padding: 20px;
-      overflow-y: auto;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      max-height: calc(100vh - 70px - 60px); /* window height minus header and padding */
     }
 
     #leaderboard h3 {
@@ -108,10 +108,12 @@
       padding-bottom: 5px;
     }
 
-    #leaderboard ul {
+    #leaderboard-list {
       list-style: none;
       padding: 0;
       margin: 10px 0 0 0;
+      flex: 1;
+      overflow-y: auto; /* scroll if too many entries */
     }
 
     #leaderboard li {
@@ -122,10 +124,21 @@
       color: var(--muted);
       text-align: right;
       transition: background 0.2s;
+      word-break: break-word; /* wrap long names */
     }
 
     #leaderboard li:hover {
       background: #666;
+    }
+
+    #my-rank {
+      margin-top: 5px;
+      padding: 6px 10px;
+      background: #222;
+      color: var(--accent);
+      font-weight: bold;
+      border-radius: 6px;
+      text-align: right;
     }
 
     .small-text {
@@ -155,12 +168,13 @@
     <div id="leaderboard">
       <h3>🏆 Leaderboard</h3>
       <ul id="leaderboard-list"></ul>
+      <div id="my-rank">Your rank: -</div>
     </div>
   </div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
-    import { getDatabase, ref, onValue, runTransaction, set } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
+    import { getDatabase, ref, onValue, runTransaction, set, get } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyAQ8hwInUpT050ZgOY3J5IHwXXByPhS5uI",
@@ -181,6 +195,7 @@
     const usernameDisplay = document.getElementById("username-display");
     const personalCountEl = document.getElementById("personal-count");
     const leaderboardList = document.getElementById("leaderboard-list");
+    const myRankEl = document.getElementById("my-rank");
     const changeNameBtn = document.getElementById("change-name");
 
     const countRef = ref(db, "counter/value");
@@ -188,12 +203,19 @@
 
     let username = localStorage.getItem("username");
     let personalClicks = parseInt(localStorage.getItem("personalClicks") || 0);
+    let unsyncedClicks = 0;
 
-    function askName() {
-      let name = prompt("Enter your name:");
-      if (!name) name = "Guest" + Math.floor(Math.random() * 1000);
+    async function askName() {
+      let name;
+      while (true) {
+        name = prompt("Enter your name:") || "Guest" + Math.floor(Math.random() * 1000);
+        const snapshot = await get(ref(db, `leaderboard/${name}`));
+        if (!snapshot.exists()) break;
+        alert("This name is already taken. Please choose another one.");
+      }
       username = name;
       personalClicks = 0;
+      unsyncedClicks = 0;
       localStorage.setItem("username", username);
       localStorage.setItem("personalClicks", personalClicks);
       updateNameDisplay();
@@ -205,23 +227,39 @@
       personalCountEl.textContent = personalClicks;
     }
 
-    onValue(countRef, (snapshot) => {
+    onValue(countRef, snapshot => {
       countEl.textContent = snapshot.val() ?? 0;
     });
 
-    onValue(leaderboardRef, (snapshot) => {
+    onValue(leaderboardRef, snapshot => {
       const data = snapshot.val() || {};
       const sorted = Object.entries(data).sort((a, b) => b[1] - a[1]);
-      leaderboardList.innerHTML = sorted.map(([name, score]) => `<li>${name}: ${score}</li>`).join("");
+      leaderboardList.innerHTML = sorted.map(([name, score]) => {
+        return `<li${name === username ? ' style="color: var(--accent); font-weight:bold;"' : ''}>${name}: ${score}</li>`;
+      }).join("");
+
+      const rank = sorted.findIndex(([name]) => name === username) + 1;
+      myRankEl.textContent = rank > 0 ? `Your rank: ${rank} / ${sorted.length}` : "Your rank: -";
     });
 
     btn.addEventListener("click", () => {
-      runTransaction(countRef, (currentValue) => (currentValue || 0) + 1);
+      runTransaction(countRef, current => (current || 0) + 1);
       personalClicks++;
+      unsyncedClicks++;
       localStorage.setItem("personalClicks", personalClicks);
       updateNameDisplay();
-      set(ref(db, "leaderboard/" + username), personalClicks);
+      if (unsyncedClicks >= 5) {
+        updateLeaderboard();
+        unsyncedClicks = 0;
+      }
     });
+
+    setInterval(() => {
+      if (unsyncedClicks > 0) {
+        updateLeaderboard();
+        unsyncedClicks = 0;
+      }
+    }, 10000);
 
     changeNameBtn.addEventListener("click", () => {
       localStorage.removeItem("username");
